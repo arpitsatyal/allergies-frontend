@@ -6,13 +6,13 @@ import { allergies } from "./allergies";
 
 const vuexLocalStorage = new VuexPersist({
   key: "vuex",
-  storage: window.localStorage,
+  storage: window.localStorage
 });
 
 const store = createStore<any>({
   modules: {
-    allergies,
     auth,
+    allergies
   },
   plugins: [vuexLocalStorage.plugin],
 });

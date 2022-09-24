@@ -4,10 +4,10 @@ export function parseDate(inputDate: Date): string {
   let date: string | number = parsedDate.getDate();
   const year = parsedDate.getFullYear();
   if (month < 10) {
-    month = `0${month}`;
+    month = '0' + month;
   }
   if (date < 10) {
-    date = `0${date}`;
+    date = '0' + date;
   }
   const formattedDate = `${year}-${month}-${date}`;
   return formattedDate;

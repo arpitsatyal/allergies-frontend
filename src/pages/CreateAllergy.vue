@@ -111,8 +111,8 @@ export default defineComponent({
     Header,
   },
   setup(props) {
-    const loading = ref<boolean>(false);
     const toast = useToast();
+    const loading = ref<boolean>(false);
 
     let iData: string;
     const formItemLayout = {

@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts">
-import { useToast } from "vue-toastification";
 import { useStore } from "vuex";
+import { useToast } from "vue-toastification";
 import { defineComponent, ref } from "@vue/runtime-core";
 
 import router from "@/router";

@@ -50,7 +50,7 @@
 <script lang="ts">
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { defineComponent, ref, onMounted } from "@vue/runtime-core";
+import { defineComponent, ref, onMounted, computed } from "@vue/runtime-core";
 import type { SizeType } from "ant-design-vue/es/config-provider";
 import {
   EditOutlined,
@@ -59,7 +59,6 @@ import {
   FallOutlined,
 } from "@ant-design/icons-vue";
 
-import { logout } from "../utils/logout";
 import Header from "@/components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
@@ -80,25 +79,12 @@ export default defineComponent({
   setup() {
     const toast = useToast();
     const store = useStore();
-    const isLoading = ref<boolean>(false);
     const size = ref<SizeType>("large");
-    const allergies = ref<IAllergyResponse[]>([]);
 
-    function fetchAllAllergies() {
-      isLoading.value = true;
-      allergiesService
-        .getAllergies()
-        .then((data) => {
-          isLoading.value = false;
-          allergies.value = data;
-          store.commit("allergies/addAllergiesToState", data);
-        })
-        .catch((err) => {
-          isLoading.value = false;
-          toastError(err);
-          logout(3000);
-        });
-    }
+    const isLoading: boolean = store.state.allergies.isLoading;
+    const allergies = computed(() => store.state.allergies.allAllergies);
+
+    const fetchAllAllergies = () => store.dispatch("allergies/fetchAllergies");
 
     function deleteAllergy(id: number) {
       if (confirm("are you sure you want to delete this allergy?")) {
@@ -127,9 +113,7 @@ export default defineComponent({
         .catch((err) => toastError(err));
     }
 
-    function goToProfile(id: number) {
-      router.push(`/profile/${id}`);
-    }
+    const goToProfile = (id: number) => router.push(`/profile/${id}`);
 
     onMounted(() => fetchAllAllergies());
 
