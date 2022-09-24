@@ -1,21 +1,20 @@
 import { createStore } from "vuex";
-import { IAllergyResponse } from "../types/allergies";
+import VuexPersist from "vuex-persist";
 
-interface State {
-  allergies: IAllergyResponse[];
-}
+import { auth } from "./auth";
+import { allergies } from "./allergies";
 
-const store = createStore<State>({
-  state() {
-    return {
-      allergies: [] as IAllergyResponse[],
-    };
+const vuexLocalStorage = new VuexPersist({
+  key: "vuex",
+  storage: window.localStorage,
+});
+
+const store = createStore<any>({
+  modules: {
+    allergies,
+    auth,
   },
-  mutations: {
-    addAllergiesToState(state, payload) {
-      state.allergies = payload;
-    },
-  },
+  plugins: [vuexLocalStorage.plugin],
 });
 
 export default store;

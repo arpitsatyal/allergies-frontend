@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { useToast } from "vue-toastification";
+import { useStore } from "vuex";
 import { defineComponent, ref } from "@vue/runtime-core";
 
 import router from "@/router";
@@ -58,6 +59,7 @@ export default defineComponent({
 
     const loading = ref<boolean>(false);
     const toast = useToast();
+    const store = useStore();
 
     function onSubmit(e: Event) {
       e.preventDefault();
@@ -71,9 +73,11 @@ export default defineComponent({
           .then((response) => {
             loading.value = false;
             toast.success(response.message);
-            localStorage.setItem("token", response.data.accessToken);
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+
+            store.commit("auth/addUserToState", response.data.user);
+            store.commit("auth/addTokenToState", response.data.accessToken);
+            store.commit("auth/addRefreshTokenToState", response.data.refreshToken);
+
             setTimeout(() => router.push("/dashboard"), 1000);
           })
           .catch((err) => {

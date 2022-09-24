@@ -34,7 +34,7 @@
           <thead class="center">
             <tr class="table-headers">
               <th>Name</th>
-              <th>Date diagnosed</th>
+              <th>Date added</th>
             </tr>
           </thead>
           <template :key="alg" v-for="alg in allergy.symptoms">

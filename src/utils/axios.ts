@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { getFromLS } from "./localStorage";
+
+import store from "@/store";
+import { getFromStore } from "./store";
 
 const baseURL = process.env.VUE_APP_API_URL 
 const instance = axios.create({
@@ -9,9 +11,9 @@ const instance = axios.create({
 instance.interceptors.request.use((request: AxiosRequestConfig) => {
   axios.defaults.headers.common["Authorization"] = "";
   delete axios.defaults.headers.common["Authorization"];
-  if (getFromLS("token")) {
+  if (getFromStore("token")) {
     if(request.headers) {
-      request.headers.Authorization = getFromLS("token");
+      request.headers.Authorization = getFromStore("token");
     }
   }
   return request;
@@ -34,13 +36,13 @@ instance.interceptors.response.use(
       instance
         .post("/refresh", {
           body: {
-            id: Number(getFromLS("user")),
-            refreshToken: getFromLS("refreshToken"),
+            id: +getFromStore("user"),
+            refreshToken: getFromStore("refreshToken"),
           },
         })
         .then((response) => {
           const newToken = response.data.data.newAccessToken;
-          localStorage.setItem("token", newToken);
+          store.commit('auth/token', newToken);
           instance.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${newToken}`;

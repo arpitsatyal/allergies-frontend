@@ -30,8 +30,8 @@
         </router-link>
 
         <div>
-          <EyeOutlined v-if="allergy.highRisk" @click="markAsHighRisk(allergy, false)" />
-          <EyeInvisibleOutlined v-else @click="markAsHighRisk(allergy, true)" />
+          <RiseOutlined v-if="allergy.highRisk" @click="markAsHighRisk(allergy, false)" />
+          <FallOutlined v-else @click="markAsHighRisk(allergy, true)" />
         </div>
 
         <DeleteOutlined key="ellipsis" @click="deleteAllergy(allergy.id)" />
@@ -55,8 +55,8 @@ import type { SizeType } from "ant-design-vue/es/config-provider";
 import {
   EditOutlined,
   DeleteOutlined,
-  EyeInvisibleOutlined,
-  EyeOutlined,
+  RiseOutlined,
+  FallOutlined,
 } from "@ant-design/icons-vue";
 
 import { logout } from "../utils/logout";
@@ -74,8 +74,8 @@ export default defineComponent({
     Loading,
     EditOutlined,
     DeleteOutlined,
-    EyeInvisibleOutlined,
-    EyeOutlined,
+    RiseOutlined,
+    FallOutlined,
   },
   setup() {
     const toast = useToast();
@@ -91,7 +91,7 @@ export default defineComponent({
         .then((data) => {
           isLoading.value = false;
           allergies.value = data;
-          store.commit("addAllergiesToState", data);
+          store.commit("allergies/addAllergiesToState", data);
         })
         .catch((err) => {
           isLoading.value = false;

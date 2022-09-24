@@ -1,6 +1,6 @@
 <template>
   <Header />
-  {{ JSON.stringify(currentAllergy, null, 4) }}
+  {{ JSON.stringify(currentAllergy) }}
   <a-button type="primary" style="margin-left: 50px" @click="goBack">Go Back</a-button>
   <h2 class="center">
     {{ paramId ? "Edit Allergy" : "Add a New Allergy" }}
@@ -24,7 +24,7 @@
       >
         <a-input
           v-model:value="formState.name"
-          :defaultValue="currentAllergy && currentAllergy.name"
+          :placeholder="currentAllergy && currentAllergy.name"
         />
       </a-form-item>
 
@@ -89,14 +89,14 @@
 <script lang="ts">
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { defineComponent, onMounted, reactive, ref, computed } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { UploadOutlined } from "@ant-design/icons-vue";
 import type { Ref } from "vue";
 
 import router from "@/router";
 import Header from "@/components/Header.vue";
+import { getFromStore } from "../utils/store";
 import { toastError } from "../utils/toastError";
-import { getFromLS } from "@/utils/localStorage";
 import { allergiesService } from "@/services/allergies";
 import { IAllergy, IAllergyResponse } from "@/types/allergies";
 
@@ -121,12 +121,20 @@ export default defineComponent({
     };
     const symptomsList = ["Fever", "Vomit", "Nausea", "Headache", "Stomach Pain"];
 
-    const store = useStore();
-    let currentAllergy: Ref<Partial<IAllergyResponse>> = ref({});
+    const { state } = useStore();
+    let currentAllergy: Ref<IAllergyResponse> = ref({
+      name: "",
+      severity: "",
+      symptoms: [],
+      image: "",
+      highRisk: false,
+      createdAt: new Date(),
+      id: 0,
+    });
 
     const imageUrl = ref<string>(process.env.VUE_APP_API_URL + "/allergies/upload-image");
     const headers = ref({
-      Authorization: `Bearer ${getFromLS("token")}`,
+      Authorization: `Bearer ${getFromStore("token")}`,
     });
 
     const formState = reactive<Record<string, any>>({});
@@ -169,15 +177,12 @@ export default defineComponent({
       }
     };
 
-    function goBack() {
-      router.push("/dashboard");
-    }
-    const allergies = computed(() => store.state.allergies);
+    const goBack = () => router.push("/dashboard");
 
     onMounted(() => {
-      const matched = allergies.value?.filter((allergy: IAllergyResponse) => {
+      const matched = state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
         if (props.paramId) {
-          if (allergy.id === parseInt(props.paramId)) {
+          if (allergy.id === +props.paramId) {
             return allergy;
           }
         }
@@ -194,8 +199,8 @@ export default defineComponent({
       headers,
       onFinish,
       handleChange,
-      formItemLayout,
       goBack,
+      formItemLayout,
     };
   },
 });
