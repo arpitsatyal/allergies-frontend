@@ -3,25 +3,25 @@
   <div v-if="allergy.name">
     <section class="profile">
       <header class="header">
-        <div class="details">
-          <img
-            v-if="allergy.image"
-            :src="allergy.image"
-            :alt="allergy.name"
-            class="profile-pic"
-          />
-          <img
-            v-else
-            src="@/assets/images/default.jpg"
-            :alt="allergy.name"
-            class="profile-pic"
-          />
-          <h1 class="heading">{{ allergy.name }}</h1>
-
-          <div class="stats fontClass">
-            <div class="col-4">
-              <h4>Severity: {{ allergy.severity }}</h4>
-            </div>
+        <div class="details flex">
+          <div>
+            <img
+              v-if="allergy.image"
+              :src="allergy.image"
+              :alt="allergy.name"
+              class="profile-pic"
+            />
+            <img
+              v-else
+              src="@/assets/images/default.jpg"
+              :alt="allergy.name"
+              class="profile-pic"
+            />
+            <h1 class="heading pt-7">{{ allergy.name }}</h1>
+          </div>
+          <div>
+            <a-progress type="circle" :percent="mapSeverity[allergy.severity]" />
+            <h2 class="heading">Severity: {{ allergy.severity }}</h2>
           </div>
         </div>
       </header>
@@ -80,6 +80,12 @@ export default defineComponent({
     });
     const paramId = new URL(location.href).pathname.split("/")[2];
 
+    const mapSeverity = ref<any>({
+      Low: 25,
+      Medium: 50,
+      High: 75,
+    });
+
     function getAllergy() {
       allergiesService
         .getAllergy(+paramId)
@@ -96,6 +102,7 @@ export default defineComponent({
       toast,
       paramId,
       allergy,
+      mapSeverity,
       parseDate,
       getAllergy,
     };
@@ -106,4 +113,10 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "../assets/global.scss";
 @import "../assets/profile.scss";
+
+.flex {
+  display: flex;
+  justify-content: space-around;
+  gap: 100px;
+}
 </style>
