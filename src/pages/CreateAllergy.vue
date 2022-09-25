@@ -82,11 +82,11 @@
   </section>
 </template>
 <script lang="ts">
+import type { Ref } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { defineComponent, onMounted, reactive, ref } from "vue";
 import { UploadOutlined } from "@ant-design/icons-vue";
-import type { Ref } from "vue";
+import { defineComponent, onMounted, reactive, ref, watch } from "vue";
 
 import router from "@/router";
 import Header from "@/components/Header.vue";
@@ -183,6 +183,15 @@ export default defineComponent({
         }
       });
       currentAllergy.value = matched && matched[0];
+    });
+
+    watch(formState, () => {
+      const allNamedAllergies = state.allergies.allAllergies.map(
+        (allergy: IAllergyResponse) => allergy.name
+      );
+      if (allNamedAllergies.includes(formState.name)) {
+        toast.warning("this allergy is already added!");
+      }
     });
 
     return {
