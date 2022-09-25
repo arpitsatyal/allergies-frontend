@@ -16,12 +16,12 @@
       />
     </a-form-item>
   </div>
-  <section class="mt-30 card" v-if="filteredAllergies.length">
+  <section class="mt-30 card" v-if="searchedAllergies.length">
     <a-card
       hoverable
       style="width: 300px"
       :key="allergy.id"
-      v-for="allergy in filteredAllergies"
+      v-for="allergy in searchedAllergies"
     >
       <template #cover>
         <img
@@ -99,7 +99,6 @@ export default defineComponent({
 
     const isLoading: boolean = store.state.allergies.isLoading;
     const allergies = computed(() => store.state.allergies.allAllergies);
-    let filteredAllergies = ref([...allergies.value]);
 
     const fetchAllAllergies = () => store.dispatch("allergies/fetchAllergies");
 
@@ -134,8 +133,8 @@ export default defineComponent({
 
     onMounted(() => fetchAllAllergies());
 
-    watch(searchTerm, () => {
-      filteredAllergies.value = allergies.value.filter((allergy: IAllergyResponse) => {
+    const searchedAllergies = computed(() => {
+      return allergies.value.filter((allergy: IAllergyResponse) => {
         if (allergy.name.includes(searchTerm.value)) {
           return allergy;
         }
@@ -145,7 +144,7 @@ export default defineComponent({
     return {
       toast,
       isLoading,
-      filteredAllergies,
+      searchedAllergies,
       size,
       searchTerm,
       deleteAllergy,
