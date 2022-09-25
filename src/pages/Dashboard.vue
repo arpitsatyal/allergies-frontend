@@ -6,8 +6,23 @@
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
   </div>
-  <section class="mt-30 card" v-if="allergies.length">
-    <a-card hoverable style="width: 300px" :key="allergy.id" v-for="allergy in allergies">
+  <div class="mt-30 center">
+    <a-form-item name="searchTerm">
+      <a-input
+        v-model:value="searchTerm"
+        placeholder="Search..."
+        :size="size"
+        style="width: 50%; border: 1px solid black"
+      />
+    </a-form-item>
+  </div>
+  <section class="mt-30 card" v-if="filteredAllergies.length">
+    <a-card
+      hoverable
+      style="width: 300px"
+      :key="allergy.id"
+      v-for="allergy in filteredAllergies"
+    >
       <template #cover>
         <img
           alt="example"
@@ -50,8 +65,8 @@
 <script lang="ts">
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import { defineComponent, ref, onMounted, computed } from "@vue/runtime-core";
 import type { SizeType } from "ant-design-vue/es/config-provider";
+import { defineComponent, ref, onMounted, computed, watch } from "@vue/runtime-core";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -59,10 +74,10 @@ import {
   FallOutlined,
 } from "@ant-design/icons-vue";
 
+import router from "@/router";
 import Header from "@/components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
-import router from "@/router";
 import { IAllergyResponse } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
 
@@ -79,10 +94,12 @@ export default defineComponent({
   setup() {
     const toast = useToast();
     const store = useStore();
+    const searchTerm = ref<string>("");
     const size = ref<SizeType>("large");
 
     const isLoading: boolean = store.state.allergies.isLoading;
     const allergies = computed(() => store.state.allergies.allAllergies);
+    let filteredAllergies = ref([...allergies.value]);
 
     const fetchAllAllergies = () => store.dispatch("allergies/fetchAllergies");
 
@@ -98,11 +115,11 @@ export default defineComponent({
       }
     }
 
-    function markAsHighRisk(allergy: IAllergyResponse, body: boolean) {
+    function markAsHighRisk(allergy: IAllergyResponse, isHighRisk: boolean) {
       allergiesService
-        .markAsHighRisk(body, allergy.id)
+        .markAsHighRisk(isHighRisk, allergy.id)
         .then(() => {
-          if (body) {
+          if (isHighRisk) {
             toast.success(`Allergy ${allergy.name} marked as high risk.`);
             fetchAllAllergies();
           } else {
@@ -117,11 +134,20 @@ export default defineComponent({
 
     onMounted(() => fetchAllAllergies());
 
+    watch(searchTerm, () => {
+      filteredAllergies.value = allergies.value.filter((allergy: IAllergyResponse) => {
+        if (allergy.name.includes(searchTerm.value)) {
+          return allergy;
+        }
+      });
+    });
+
     return {
       toast,
       isLoading,
-      allergies,
+      filteredAllergies,
       size,
+      searchTerm,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,

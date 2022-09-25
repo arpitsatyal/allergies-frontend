@@ -24,7 +24,8 @@
       >
         <a-input
           v-model:value="formState.name"
-          :placeholder="currentAllergy && currentAllergy.name"
+          placeholder="Please add a name"
+          :defaultValue="currentAllergy && currentAllergy.name"
         />
       </a-form-item>
 
@@ -32,21 +33,15 @@
         name="severity"
         label="Severity"
         has-feedback
-        :rules="[
-          !paramId && {
-            required: true,
-            message: 'Please select a severity!',
-          },
-        ]"
+        :rules="[!paramId && { required: true, message: 'Please select a severity!' }]"
       >
         <a-select
           v-model:value="formState.severity"
           placeholder="Please select a severity"
-          :defaultValue="currentAllergy && currentAllergy.severity"
         >
           <a-select-option value="Low">Low</a-select-option>
-          <a-select-option value="High">High</a-select-option>
           <a-select-option value="Medium">Medium</a-select-option>
+          <a-select-option value="High">High</a-select-option>
         </a-select>
       </a-form-item>
 
