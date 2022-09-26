@@ -115,7 +115,7 @@ export default defineComponent({
     };
     const symptomsList = ["Fever", "Vomit", "Nausea", "Headache", "Stomach Pain"];
 
-    const { state } = useStore();
+    const store = useStore();
 
     const imageUrl = ref<string>(process.env.VUE_APP_API_URL + "/allergies/upload-image");
     const headers = ref({
@@ -165,7 +165,7 @@ export default defineComponent({
     const goBack = () => router.push("/dashboard");
 
     const matchedAllergy = computed(() => {
-      return state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
+      return store.state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
         if (props.paramId) {
           if (allergy.id === +props.paramId) {
             return allergy;
@@ -175,7 +175,11 @@ export default defineComponent({
     });
 
     watch(formState, () => {
-      const allNamedAllergies = state.allergies.allAllergies.map(
+      store.dispatch("allergies/fetchAllergies", {
+        pageSize: 100,
+        page: 1,
+      });
+      const allNamedAllergies = store.state.allergies.allAllergies.map(
         (allergy: IAllergyResponse) => allergy.name
       );
       if (allNamedAllergies.includes(formState.name)) {

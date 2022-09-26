@@ -163,6 +163,13 @@ export default defineComponent({
       });
     });
 
+    watch(searchTerm, () => {
+      store.dispatch("allergies/fetchAllergies", {
+        pageSize: 100,
+        page: 1,
+      });
+    });
+
     return {
       toast,
       isLoading,

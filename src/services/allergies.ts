@@ -24,10 +24,7 @@ const allergiesRequests = {
 };
 
 export const allergiesService = {
-  getAllergies: (
-    page?: number,
-    pageSize?: number
-  ): Promise<IAllergyResponse[]> => {
+  getAllergies: (page = 1, pageSize = 1): Promise<IAllergyResponse[]> => {
     return allergiesRequests.get(
       `/allergies?page=${page}&pagesize=${pageSize}`
     );
