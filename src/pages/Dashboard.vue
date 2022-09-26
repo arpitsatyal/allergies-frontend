@@ -103,12 +103,12 @@ export default defineComponent({
   setup() {
     const toast = useToast();
     const store = useStore();
-    const searchTerm = ref<string>("");
+    const searchTerm = ref("");
     const size = ref<SizeType>("large");
 
-    const pageSize = ref(1);
-    const page = ref(1);
     const total = ref(0);
+    const page = ref(1);
+    const pageSize = ref(1);
 
     const isLoading: boolean = store.state.allergies.isLoading;
     const allergies = computed(() => store.state.allergies.allAllergies);

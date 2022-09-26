@@ -45,7 +45,7 @@
           </template>
         </table>
       </template>
-      <p v-else class="center">There are no symptoms for this allergy added yet.</p>
+      <p v-else class="center">There are no symptoms added for this allergy yet.</p>
     </section>
   </div>
   <Loading v-else />
