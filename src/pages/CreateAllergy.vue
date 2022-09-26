@@ -88,6 +88,7 @@ import { UploadOutlined } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, watch, computed } from "vue";
 
 import router from "@/router";
+import { debounce } from "@/utils/debounce";
 import Header from "@/components/Header.vue";
 import { getFromStore } from "../utils/store";
 import { toastError } from "../utils/toastError";
@@ -174,18 +175,21 @@ export default defineComponent({
       });
     });
 
-    watch(formState, () => {
-      store.dispatch("allergies/fetchAllergies", {
-        pageSize: 100,
-        page: 1,
-      });
-      const allNamedAllergies = store.state.allergies.allAllergies.map(
-        (allergy: IAllergyResponse) => allergy.name
-      );
-      if (allNamedAllergies.includes(formState.name)) {
-        toast.warning("this allergy is already added!");
-      }
-    });
+    watch(
+      formState,
+      debounce(() => {
+        store.dispatch("allergies/fetchAllergies", {
+          pageSize: 100,
+          page: 1,
+        });
+        const allNamedAllergies = store.state.allergies.allAllergies.map(
+          (allergy: IAllergyResponse) => allergy.name
+        );
+        if (allNamedAllergies.includes(formState.name)) {
+          toast.warning("this allergy is already added!");
+        }
+      })
+    );
 
     return {
       loading,

@@ -65,7 +65,7 @@
       show-size-changer
       v-model:current="page"
       v-model:pageSize="pageSize"
-      :total="10"
+      :total="total + 1"
     />
   </div>
 </template>
@@ -108,6 +108,7 @@ export default defineComponent({
 
     const pageSize = ref(1);
     const page = ref(1);
+    const total = ref(0);
 
     const isLoading: boolean = store.state.allergies.isLoading;
     const allergies = computed(() => store.state.allergies.allAllergies);
@@ -147,7 +148,10 @@ export default defineComponent({
 
     const goToProfile = (id: number) => router.push(`/profile/${id}`);
 
-    onMounted(() => fetchAllAllergies());
+    onMounted(() => {
+      fetchAllAllergies();
+      findTotal();
+    });
 
     const searchedAllergies = computed(() => {
       return allergies.value.filter((allergy: IAllergyResponse) => {
@@ -156,6 +160,13 @@ export default defineComponent({
         }
       });
     });
+
+    function findTotal() {
+      allergiesService
+        .getAllergies(1, 100)
+        .then((data) => (total.value = data.length))
+        .catch((err) => toastError(err));
+    }
 
     watch([page, pageSize], () => {
       store.dispatch("allergies/fetchAllergies", {
@@ -182,6 +193,7 @@ export default defineComponent({
       searchTerm,
       page,
       pageSize,
+      total,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,
