@@ -60,6 +60,14 @@
     <Loading v-if="isLoading" />
     <a-empty v-else class="mt-90" />
   </div>
+  <div class="paginate center">
+    <a-pagination
+      show-size-changer
+      v-model:current="page"
+      v-model:pageSize="pageSize"
+      :total="10"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -97,10 +105,17 @@ export default defineComponent({
     const searchTerm = ref<string>("");
     const size = ref<SizeType>("large");
 
+    const pageSize = ref(1);
+    const page = ref(1);
+
     const isLoading: boolean = store.state.allergies.isLoading;
     const allergies = computed(() => store.state.allergies.allAllergies);
 
-    const fetchAllAllergies = () => store.dispatch("allergies/fetchAllergies");
+    const fetchAllAllergies = () =>
+      store.dispatch("allergies/fetchAllergies", {
+        pageSize: pageSize.value,
+        page: page.value,
+      });
 
     function deleteAllergy(id: number) {
       if (confirm("are you sure you want to delete this allergy?")) {
@@ -141,12 +156,21 @@ export default defineComponent({
       });
     });
 
+    watch([page, pageSize], () => {
+      store.dispatch("allergies/fetchAllergies", {
+        pageSize: pageSize.value,
+        page: page.value,
+      });
+    });
+
     return {
       toast,
       isLoading,
       searchedAllergies,
       size,
       searchTerm,
+      page,
+      pageSize,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,
@@ -158,11 +182,4 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "../assets/global.scss";
-.card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
 </style>

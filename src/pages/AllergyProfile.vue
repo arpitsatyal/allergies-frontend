@@ -45,7 +45,7 @@
           </template>
         </table>
       </template>
-      <p v-else class="center">There are no symptoms for this allergies added yet.</p>
+      <p v-else class="center">There are no symptoms for this allergy added yet.</p>
     </section>
   </div>
   <Loading v-else />
@@ -113,10 +113,4 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "../assets/global.scss";
 @import "../assets/profile.scss";
-
-.flex {
-  display: flex;
-  justify-content: space-around;
-  gap: 100px;
-}
 </style>

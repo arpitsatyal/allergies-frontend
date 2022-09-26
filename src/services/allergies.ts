@@ -16,7 +16,7 @@ const allergiesRequests = {
   markAsHighRisk: (url: string, body: boolean) =>
     instance
       .put<IAllergyResponse>(url, {
-          highRisk: body,
+        highRisk: body,
       })
       .then(responseBody),
 
@@ -24,8 +24,14 @@ const allergiesRequests = {
 };
 
 export const allergiesService = {
-  getAllergies: (): Promise<IAllergyResponse[]> =>
-    allergiesRequests.get("/allergies"),
+  getAllergies: (
+    page?: number,
+    pageSize?: number
+  ): Promise<IAllergyResponse[]> => {
+    return allergiesRequests.get(
+      `/allergies?page=${page}&pagesize=${pageSize}`
+    );
+  },
   getAllergy: (id: number): Promise<IAllergyResponse> =>
     allergiesRequests.get(`/allergies/${id}`),
   addAllergy: (allergy: IAllergy): Promise<IAllergyResponse> =>
@@ -35,5 +41,8 @@ export const allergiesService = {
   deleteAllergy: (id: number): Promise<any> =>
     allergiesRequests.delete(`/allergies/${id}`),
   markAsHighRisk: (body: boolean, id: number): Promise<any> =>
-    allergiesRequests.markAsHighRisk(`/allergies/mark-as-high-risk/${id}`, body),
+    allergiesRequests.markAsHighRisk(
+      `/allergies/mark-as-high-risk/${id}`,
+      body
+    ),
 };

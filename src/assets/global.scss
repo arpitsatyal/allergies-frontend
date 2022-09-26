@@ -38,3 +38,19 @@
 .ant-table table td {
   font-size: 14px;
 }
+
+.flex {
+  display: flex;
+  justify-content: space-around;
+  gap: 100px;
+}
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.paginate {
+  margin-top: 30px;
+}

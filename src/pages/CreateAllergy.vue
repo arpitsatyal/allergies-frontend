@@ -82,11 +82,10 @@
   </section>
 </template>
 <script lang="ts">
-import { computed, Ref } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import { UploadOutlined } from "@ant-design/icons-vue";
-import { defineComponent, onMounted, reactive, ref, watch } from "vue";
+import { defineComponent, reactive, ref, watch, computed } from "vue";
 
 import router from "@/router";
 import Header from "@/components/Header.vue";
@@ -117,15 +116,6 @@ export default defineComponent({
     const symptomsList = ["Fever", "Vomit", "Nausea", "Headache", "Stomach Pain"];
 
     const { state } = useStore();
-    // let currentAllergy: Ref<IAllergyResponse> = ref({
-    //   name: "",
-    //   severity: "",
-    //   symptoms: [],
-    //   image: "",
-    //   highRisk: false,
-    //   createdAt: new Date(),
-    //   id: 0,
-    // });
 
     const imageUrl = ref<string>(process.env.VUE_APP_API_URL + "/allergies/upload-image");
     const headers = ref({
@@ -197,13 +187,13 @@ export default defineComponent({
       loading,
       symptomsList,
       formState,
-      currentAllergy: matchedAllergy.value.length && matchedAllergy.value[0],
+      currentAllergy: matchedAllergy.value[0] as IAllergyResponse,
       imageUrl,
       headers,
+      formItemLayout,
+      goBack,
       onFinish,
       handleChange,
-      goBack,
-      formItemLayout,
     };
   },
 });

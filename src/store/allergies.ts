@@ -17,7 +17,7 @@ export const allergies = {
     };
   },
   getters: {
-    getAllergies: (state: State) => state.allAllergies
+    getAllergies: (state: State) => state.allAllergies,
   },
   mutations: {
     addAllergiesToState(state: State, payload: IAllergyResponse[]) {
@@ -28,10 +28,13 @@ export const allergies = {
     },
   },
   actions: {
-    fetchAllergies({ commit }: any) {
+    fetchAllergies(
+      { commit }: any,
+      paginationData: { page: number; pageSize: number }
+    ) {
       commit("setLoading", true);
       allergiesService
-        .getAllergies()
+        .getAllergies(+paginationData.page, +paginationData.pageSize)
         .then((data) => {
           commit("setLoading", false);
           commit("addAllergiesToState", data);
