@@ -45,5 +45,11 @@ export const allergies = {
           logout(3000);
         });
     },
+    searchAllergies({ commit }: any, searchTerm: string) {
+      allergiesService
+        .searchAllergies(searchTerm)
+        .then((data) => commit("addAllergiesToState", data))
+        .catch((err) => toastError(err));
+    },
   },
 };

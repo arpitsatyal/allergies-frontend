@@ -177,12 +177,7 @@ export default defineComponent({
 
     watch(
       searchTerm,
-      debounce(() => {
-        store.dispatch("allergies/fetchAllergies", {
-          pageSize: 100,
-          page: 1,
-        });
-      })
+      debounce(() => store.dispatch("allergies/searchAllergies", searchTerm.value))
     );
 
     return {

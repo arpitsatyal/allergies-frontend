@@ -21,6 +21,11 @@ const allergiesRequests = {
       .then(responseBody),
 
   delete: (url: string) => instance.delete<any>(url).then(responseBody),
+
+  search: (url: string, searchTerm: string) =>
+    instance
+      .post<IAllergyResponse>(url, { query: searchTerm })
+      .then(responseBody),
 };
 
 export const allergiesService = {
@@ -42,4 +47,6 @@ export const allergiesService = {
       `/allergies/mark-as-high-risk/${id}`,
       body
     ),
+  searchAllergies: (searchTerm: string): Promise<IAllergyResponse[]> =>
+    allergiesRequests.search(`/allergies/search`, searchTerm),
 };

@@ -178,10 +178,7 @@ export default defineComponent({
     watch(
       formState,
       debounce(() => {
-        store.dispatch("allergies/fetchAllergies", {
-          pageSize: 100,
-          page: 1,
-        });
+        store.dispatch("allergies/searchAllergies", formState.name);
         const allNamedAllergies = store.state.allergies.allAllergies.map(
           (allergy: IAllergyResponse) => allergy.name
         );
