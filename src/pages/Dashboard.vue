@@ -84,6 +84,7 @@ import {
 
 import router from "@/router";
 import Header from "@/components/Header.vue";
+import { debounce } from "../utils/debounce";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
@@ -163,12 +164,15 @@ export default defineComponent({
       });
     });
 
-    watch(searchTerm, () => {
-      store.dispatch("allergies/fetchAllergies", {
-        pageSize: 100,
-        page: 1,
-      });
-    });
+    watch(
+      searchTerm,
+      debounce(() => {
+        store.dispatch("allergies/fetchAllergies", {
+          pageSize: 100,
+          page: 1,
+        });
+      })
+    );
 
     return {
       toast,
