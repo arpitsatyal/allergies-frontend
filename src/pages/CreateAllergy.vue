@@ -1,6 +1,5 @@
 <template>
   <Header />
-  {{ JSON.stringify(currentAllergy) }}
   <a-button type="primary" style="margin-left: 50px" @click="goBack">Go Back</a-button>
   <h2 class="center">
     {{ paramId ? "Edit Allergy" : "Add a New Allergy" }}
@@ -38,6 +37,7 @@
         <a-select
           v-model:value="formState.severity"
           placeholder="Please select a severity"
+          :defaultValue="currentAllergy && currentAllergy.severity"
         >
           <a-select-option value="Low">Low</a-select-option>
           <a-select-option value="Medium">Medium</a-select-option>
@@ -82,7 +82,7 @@
   </section>
 </template>
 <script lang="ts">
-import type { Ref } from "vue";
+import { computed, Ref } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import { UploadOutlined } from "@ant-design/icons-vue";
@@ -117,15 +117,15 @@ export default defineComponent({
     const symptomsList = ["Fever", "Vomit", "Nausea", "Headache", "Stomach Pain"];
 
     const { state } = useStore();
-    let currentAllergy: Ref<IAllergyResponse> = ref({
-      name: "",
-      severity: "",
-      symptoms: [],
-      image: "",
-      highRisk: false,
-      createdAt: new Date(),
-      id: 0,
-    });
+    // let currentAllergy: Ref<IAllergyResponse> = ref({
+    //   name: "",
+    //   severity: "",
+    //   symptoms: [],
+    //   image: "",
+    //   highRisk: false,
+    //   createdAt: new Date(),
+    //   id: 0,
+    // });
 
     const imageUrl = ref<string>(process.env.VUE_APP_API_URL + "/allergies/upload-image");
     const headers = ref({
@@ -174,15 +174,14 @@ export default defineComponent({
 
     const goBack = () => router.push("/dashboard");
 
-    onMounted(() => {
-      const matched = state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
+    const matchedAllergy = computed(() => {
+      return state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
         if (props.paramId) {
           if (allergy.id === +props.paramId) {
             return allergy;
           }
         }
       });
-      currentAllergy.value = matched && matched[0];
     });
 
     watch(formState, () => {
@@ -198,7 +197,7 @@ export default defineComponent({
       loading,
       symptomsList,
       formState,
-      currentAllergy,
+      currentAllergy: matchedAllergy.value.length && matchedAllergy.value[0],
       imageUrl,
       headers,
       onFinish,
