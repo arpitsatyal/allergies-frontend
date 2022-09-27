@@ -68,7 +68,7 @@
       v-model:pageSize="pageSize"
       :total="total + 1"
     />
-    <Loading v-else />
+    <a-spin v-else />
   </div>
 </template>
 
