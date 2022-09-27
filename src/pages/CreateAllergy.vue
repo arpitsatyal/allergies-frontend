@@ -183,7 +183,7 @@ export default defineComponent({
         const allNamedAllergies = store.state.allergies.allAllergies.map(
           (allergy: IAllergyResponse) => allergy.name
         );
-        if (allNamedAllergies.includes(formState.name)) {
+        if (allNamedAllergies.includes(formState.name.toLowerCase())) {
           toast.warning("this allergy is already added!");
         }
       })

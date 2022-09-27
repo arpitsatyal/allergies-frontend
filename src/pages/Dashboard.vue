@@ -115,12 +115,11 @@ export default defineComponent({
     const isLoading = computed(() => store.state.allergies.isLoading);
     const allergies = computed(() => store.state.allergies.allAllergies);
 
-    const fetchAllAllergies = () => {
+    const fetchAllAllergies = () =>
       store.dispatch("allergies/fetchAllergies", {
         pageSize: pageSize.value,
         page: page.value,
       });
-    };
 
     function deleteAllergy(id: number) {
       if (confirm("are you sure you want to delete this allergy?")) {
@@ -157,7 +156,7 @@ export default defineComponent({
 
     const searchedAllergies = computed(() => {
       return allergies.value.filter((allergy: IAllergyResponse) => {
-        if (allergy.name.includes(searchTerm.value)) {
+        if (allergy.name.includes(searchTerm.value.toLowerCase())) {
           return allergy;
         }
       });
