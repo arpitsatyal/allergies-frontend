@@ -50,8 +50,8 @@ export const allergies = {
       allergiesService
         .searchAllergies(searchTerm)
         .then((data) => {
-          commit("addAllergiesToState", data);
           commit("setLoading", false);
+          commit("addAllergiesToState", data);
         })
         .catch((err) => {
           toastError(err);

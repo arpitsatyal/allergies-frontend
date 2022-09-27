@@ -62,11 +62,13 @@
   </div>
   <div class="mt-30 center">
     <a-pagination
+      v-if="total"
       show-size-changer
       v-model:current="page"
       v-model:pageSize="pageSize"
       :total="total + 1"
     />
+    <Loading v-else />
   </div>
 </template>
 
@@ -106,7 +108,7 @@ export default defineComponent({
     const searchTerm = ref("");
     const size = ref<SizeType>("large");
 
-    const total = ref(0);
+    const total = ref<number | null>(null);
     const page = ref(1);
     const pageSize = ref(1);
 

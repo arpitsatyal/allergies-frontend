@@ -6,7 +6,7 @@
   </h2>
   <section class="mt-30">
     <a-form
-      class="form"
+      class="allergyForm"
       :model="formState"
       name="validate_other"
       v-bind="formItemLayout"
