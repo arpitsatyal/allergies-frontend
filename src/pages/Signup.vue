@@ -1,6 +1,6 @@
 <template>
   <div class="info">
-    <h2>Welcome to Allergy Manegement</h2>
+    <h2>Welcome to Allergies Manegement</h2>
     <p>Please login or sign up to continue.</p>
   </div>
   <div class="container">

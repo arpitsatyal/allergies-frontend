@@ -1,7 +1,7 @@
-import { allergiesService } from "@/services/allergies";
-import { IAllergyResponse } from "@/types/allergies";
 import { logout } from "@/utils/logout";
 import { toastError } from "@/utils/toastError";
+import { IAllergyResponse } from "@/types/allergies";
+import { allergiesService } from "@/services/allergies";
 
 interface State {
   allAllergies: IAllergyResponse[];
@@ -36,20 +36,27 @@ export const allergies = {
       allergiesService
         .getAllergies(+paginationData.page, +paginationData.pageSize)
         .then((data) => {
-          commit("setLoading", false);
           commit("addAllergiesToState", data);
+          commit("setLoading", false);
         })
         .catch((err) => {
           commit("setLoading", false);
           toastError(err);
-          logout(3000);
+          logout();
         });
     },
     searchAllergies({ commit }: any, searchTerm: string) {
+      commit("setLoading", true);
       allergiesService
         .searchAllergies(searchTerm)
-        .then((data) => commit("addAllergiesToState", data))
-        .catch((err) => toastError(err));
+        .then((data) => {
+          commit("addAllergiesToState", data);
+          commit("setLoading", false);
+        })
+        .catch((err) => {
+          toastError(err);
+          commit("setLoading", false);
+        });
     },
   },
 };

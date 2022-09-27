@@ -60,7 +60,7 @@
     <Loading v-if="isLoading" />
     <a-empty v-else class="mt-90" />
   </div>
-  <div class="paginate center">
+  <div class="mt-30 center">
     <a-pagination
       show-size-changer
       v-model:current="page"
@@ -110,14 +110,15 @@ export default defineComponent({
     const page = ref(1);
     const pageSize = ref(1);
 
-    const isLoading: boolean = store.state.allergies.isLoading;
+    const isLoading = computed(() => store.state.allergies.isLoading);
     const allergies = computed(() => store.state.allergies.allAllergies);
 
-    const fetchAllAllergies = () =>
+    const fetchAllAllergies = () => {
       store.dispatch("allergies/fetchAllergies", {
         pageSize: pageSize.value,
         page: page.value,
       });
+    };
 
     function deleteAllergy(id: number) {
       if (confirm("are you sure you want to delete this allergy?")) {
@@ -137,11 +138,10 @@ export default defineComponent({
         .then(() => {
           if (isHighRisk) {
             toast.success(`Allergy ${allergy.name} marked as high risk.`);
-            fetchAllAllergies();
           } else {
             toast.warning(`Allergy ${allergy.name} un-marked as high risk.`);
-            fetchAllAllergies();
           }
+          fetchAllAllergies();
         })
         .catch((err) => toastError(err));
     }

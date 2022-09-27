@@ -13,7 +13,7 @@
           </template>
           <template #title>Settings</template>
           <a-menu-item-group title="Actions">
-            <a-menu-item @click="logout(0)">Logout</a-menu-item>
+            <a-menu-item @click="logout">Logout</a-menu-item>
           </a-menu-item-group>
         </a-sub-menu>
       </a-menu>

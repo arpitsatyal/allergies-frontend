@@ -1,6 +1,8 @@
+import store from "@/store";
 import router from "@/router";
 
-export function logout(timeout?: number) {
+export function logout() {
+  store.commit('auth/removeAllData');
   localStorage.clear();
-  timeout ? setTimeout(() => router.push("/"), timeout) : router.push("/");
+  router.push('/');
 }

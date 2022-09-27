@@ -3,7 +3,7 @@
   <div v-if="allergy.name">
     <section class="profile">
       <header class="header">
-        <div class="details flex">
+        <div class="center flex">
           <div>
             <img
               v-if="allergy.image"

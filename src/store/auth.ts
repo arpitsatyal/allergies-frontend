@@ -1,9 +1,9 @@
 import { IUser } from "./../types/auth";
 
 interface State {
-  user: IUser;
-  token: string;
-  refreshToken: string;
+  user: IUser | null;
+  token: string | null;
+  refreshToken: string | null;
 }
 
 export const auth = {
@@ -24,6 +24,11 @@ export const auth = {
     },
     addRefreshTokenToState(state: State, payload: string) {
       state.refreshToken = payload;
+    },
+    removeAllData(state: State) {
+      state.user = null;
+      state.token = null;
+      state.refreshToken = null;
     },
   },
 };
