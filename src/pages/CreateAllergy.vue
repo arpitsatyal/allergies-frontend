@@ -6,6 +6,7 @@
   </h2>
   <section class="mt-30">
     <a-form
+      class="form"
       :model="formState"
       name="validate_other"
       v-bind="formItemLayout"
@@ -75,7 +76,7 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-        <a-button type="primary" v-if="loading" loading>Loading</a-button>
+        <a-button type="primary" disabled v-if="loading" loading>Loading</a-button>
         <a-button type="primary" v-else html-type="submit">Submit</a-button>
       </a-form-item>
     </a-form>
