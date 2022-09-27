@@ -13,6 +13,11 @@
           </template>
           <template #title>Settings</template>
           <a-menu-item-group title="Actions">
+            <div v-if="isAdmin">
+              <router-link :to="{ name: 'Users' }">
+                <a-menu-item>All Users</a-menu-item>
+              </router-link>
+            </div>
             <a-menu-item @click="logout">Logout</a-menu-item>
           </a-menu-item-group>
         </a-sub-menu>
@@ -23,20 +28,27 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "@vue/runtime-core";
+
 import router from "@/router";
 import { logout } from "@/utils/logout";
-import { defineComponent } from "@vue/runtime-core";
+import { isUserTheAdmin } from "../composables/isAdmin";
 import { SettingOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
+  name: "Header",
+
   components: {
     SettingOutlined,
   },
   setup() {
+    const isAdmin = isUserTheAdmin();
+
     function goToDashboard() {
       router.push("/dashboard");
     }
     return {
+      isAdmin,
       logout,
       goToDashboard,
     };

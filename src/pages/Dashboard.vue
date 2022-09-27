@@ -5,6 +5,7 @@
     <a-button type="primary" shape="round" :size="size">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
+    <h2 class="center">Welcome, {{ currentUser }}</h2>
   </div>
   <div class="mt-30 center">
     <a-form-item name="searchTerm">
@@ -112,6 +113,7 @@ export default defineComponent({
     const page = ref(1);
     const pageSize = ref(1);
 
+    const currentUser = computed(() => store.state.auth.user.name);
     const isLoading = computed(() => store.state.allergies.isLoading);
     const allergies = computed(() => store.state.allergies.allAllergies);
 
@@ -190,6 +192,7 @@ export default defineComponent({
       page,
       pageSize,
       total,
+      currentUser,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,

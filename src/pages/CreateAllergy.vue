@@ -92,6 +92,7 @@ import router from "@/router";
 import { debounce } from "@/utils/debounce";
 import Header from "@/components/Header.vue";
 import { getFromStore } from "../utils/store";
+import { goBack } from "../composables/goBack";
 import { toastError } from "../utils/toastError";
 import { allergiesService } from "@/services/allergies";
 import { IAllergy, IAllergyResponse } from "@/types/allergies";
@@ -163,8 +164,6 @@ export default defineComponent({
           });
       }
     };
-
-    const goBack = () => router.push("/dashboard");
 
     const matchedAllergy = computed(() => {
       return store.state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {

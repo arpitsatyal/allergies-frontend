@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "../pages/Login.vue";
+import Users from "../pages/Users.vue";
 import Signup from "../pages/Signup.vue";
+import NotFound from "../pages/NotFound.vue";
 import Dashboard from "../pages/Dashboard.vue";
-import { canUserAccess } from "@/utils/isAuthorized";
 import CreateAllergy from "../pages/CreateAllergy.vue";
 import UpdateAllergy from "../pages/UpdateAllergy.vue";
 import AllergyProfile from "../pages/AllergyProfile.vue";
+
+import { isUserTheAdmin } from "@/composables/isAdmin";
+import { canUserAccess } from "@/composables/isAuthorized";
 
 const routes = [
   {
@@ -57,6 +61,21 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/users",
+    name: "Users",
+    component: Users,
+    meta: {
+      requiresAuth: true,
+      isAdminRoute: true,
+    },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: NotFound,
+    meta: { notFound: true },
+  },
 ];
 
 const router = createRouter({
@@ -65,13 +84,20 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  if (!requiresAuth && canUserAccess()) {
+  const isAdmin = isUserTheAdmin();
+  const requiresAuth = to.matched.some(({ meta }) => meta.requiresAuth);
+  const isNotFound = to.matched.some(({ meta }) => meta.notFound);
+  const isAdminRoute = to.matched.some(({ meta }) => meta.isAdminRoute);
+
+  if (!requiresAuth && !isNotFound && canUserAccess()) {
     // redirect if user is logged in
     next("/dashboard");
   } else if (requiresAuth && !canUserAccess()) {
     // Check for protected route
     next("");
+  } else if (isAdminRoute && !isAdmin.value) {
+    // protect admin routes
+    next("/not-found");
   } else {
     next();
   }

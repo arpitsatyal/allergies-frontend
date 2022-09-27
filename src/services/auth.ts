@@ -7,6 +7,9 @@ const responseBody = (response: AxiosResponse) => response.data;
 const authRequests = {
   post: (url: string, user: IUser) =>
     instance.post<ISignUpResponse>(url, user).then(responseBody),
+
+  getAllUsers: (url: string) =>
+    instance.get<IUser>(url).then(responseBody),
 };
 
 export const authService = {
@@ -15,4 +18,7 @@ export const authService = {
 
   signup: (user: IUser): Promise<SignUpResponse> =>
     authRequests.post(`/register`, user),
+
+  getAllUsers: (): Promise<IUser[]> =>
+    authRequests.getAllUsers(`/users`),
 };
