@@ -1,12 +1,11 @@
 import store from "@/store";
-import { computed, ref, Ref } from "@vue/runtime-core";
 
-export function isUserTheAdmin(): Ref<boolean> {
-  const user = computed(() => store.state.auth.user);
-  const isAdmin = ref(false);
+export function isUserTheAdmin(): boolean {
+  const user = store.state?.auth?.user;
+  let isAdmin = false;
 
-  if (user?.value?.role === "admin") {
-    isAdmin.value = true;
+  if (user.role === "admin") {
+    isAdmin = true;
   }
   return isAdmin;
 }

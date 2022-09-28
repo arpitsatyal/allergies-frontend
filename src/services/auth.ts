@@ -9,6 +9,7 @@ const authRequests = {
     instance.post<ISignUpResponse>(url, user).then(responseBody),
 
   getAllUsers: (url: string) => instance.get<IUser>(url).then(responseBody),
+  getUser: (url: string) => instance.get<IUser>(url).then(responseBody),
 };
 
 export const authService = {
@@ -18,5 +19,6 @@ export const authService = {
   signup: (user: IUser): Promise<SignUpResponse> =>
     authRequests.post(`/register`, user),
 
+  getUser: (id: number): Promise<IUser> => authRequests.getUser(`/user/${id}`),
   getAllUsers: (): Promise<IUser[]> => authRequests.getAllUsers(`/users`),
 };

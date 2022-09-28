@@ -79,19 +79,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
-  const isAdmin = isUserTheAdmin();
-  const requiresAuth = to.matched.some(({ meta }) => meta?.requiresAuth);
   const isNotFound = to.matched.some(({ meta }) => meta.notFound);
   const isAdminRoute = to.matched.some(({ meta }) => meta.isAdminRoute);
+  const requiresAuth = to.matched.some(({ meta }) => meta?.requiresAuth);
 
   if (!requiresAuth && !isNotFound && canUserAccess()) {
-    // redirect if user is logged in
     next("/dashboard");
   } else if (requiresAuth && !canUserAccess()) {
-    // Check for protected route
     next("/");
-  } else if (isAdminRoute && !isAdmin.value) {
-    // protect admin routes
+  } else if (isAdminRoute && !isUserTheAdmin()) {
     next("/not-found");
   } else {
     next();

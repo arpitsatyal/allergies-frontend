@@ -137,10 +137,9 @@ export default defineComponent({
 
     const onFinish = (values: IAllergy) => {
       loading.value = true;
-      const { image, ...allergyData } = values;
       if (props.paramId) {
         allergiesService
-          .updateAllergy({ ...allergyData, image: iData }, +props.paramId)
+          .updateAllergy({ ...values, image: iData }, +props.paramId)
           .then(() => {
             loading.value = false;
             toast.success("Allergy updated successfully...");
@@ -152,7 +151,7 @@ export default defineComponent({
           });
       } else {
         allergiesService
-          .addAllergy({ ...allergyData, image: iData })
+          .addAllergy({ ...values, image: iData })
           .then(() => {
             loading.value = false;
             toast.success("Allergy created successfully...");

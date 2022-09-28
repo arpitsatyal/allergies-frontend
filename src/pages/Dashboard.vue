@@ -17,7 +17,7 @@
         v-model:value="searchTerm"
         placeholder="Search..."
         :size="size"
-        style="width: 50%; border: 1px solid black"
+        style="width: 20%; border: 1px solid black"
       />
     </a-form-item>
   </div>
@@ -124,10 +124,9 @@ export default defineComponent({
     const store = useStore();
     const toast = new ToastService();
     const isAdmin = isUserTheAdmin();
-
     const page = ref(1);
     const total = ref(0);
-    const pageSize = ref(1);
+    const pageSize = ref(3);
     const searchTerm = ref("");
     const size = ref<SizeType>("large");
 

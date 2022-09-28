@@ -26,6 +26,9 @@ const allergiesRequests = {
     instance
       .post<IAllergyResponse>(url, { query: searchTerm })
       .then(responseBody),
+
+  addComment: (url: string, comment: string) =>
+    instance.put<IAllergyResponse>(url, { comment }).then(responseBody),
 };
 
 export const allergiesService = {
@@ -49,4 +52,7 @@ export const allergiesService = {
     ),
   searchAllergies: (searchTerm: string): Promise<IAllergyResponse[]> =>
     allergiesRequests.search(`/allergies/search`, searchTerm),
+
+  addComment: (comment: string, id: number): Promise<IAllergyResponse> =>
+    allergiesRequests.addComment(`/allergies/add-comment/${id}`, comment),
 };
