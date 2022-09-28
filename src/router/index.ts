@@ -80,7 +80,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
   const isAdmin = isUserTheAdmin();
-  
   const requiresAuth = to.matched.some(({ meta }) => meta?.requiresAuth);
   const isNotFound = to.matched.some(({ meta }) => meta.notFound);
   const isAdminRoute = to.matched.some(({ meta }) => meta.isAdminRoute);

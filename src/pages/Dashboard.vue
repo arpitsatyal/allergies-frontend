@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <Header />
-  <div class="my-20">
+  <div class="my-20 flex">
     <a-button type="primary" shape="round" :size="size">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
@@ -10,6 +10,17 @@
       <span v-if="isAdmin">admin ;)</span>
       {{ currentUser }}
     </h2>
+    <div>
+      <a-button type="primary" @click="showDrawer">FAQ</a-button>
+      <a-drawer
+        v-model:visible="visible"
+        class="custom-class"
+        style="color: red"
+        placement="right"
+      >
+        <FAQ />
+      </a-drawer>
+    </div>
   </div>
   <div class="mt-30 center">
     <a-form-item name="searchTerm">
@@ -21,6 +32,7 @@
       />
     </a-form-item>
   </div>
+
   <section class="mt-30 card" v-if="searchedAllergies.length">
     <a-card
       hoverable
@@ -49,9 +61,16 @@
           <EditOutlined />
         </router-link>
 
-        <div>
-          <RiseOutlined v-if="allergy.highRisk" @click="markAsHighRisk(allergy, false)" />
-          <FallOutlined v-else @click="markAsHighRisk(allergy, true)" />
+        <div id="components-a-tooltip-demo-color">
+          <div>
+            <a-tooltip title="use arrow buttons to change risks." color="pink">
+              <RiseOutlined
+                v-if="allergy.highRisk"
+                @click="markAsHighRisk(allergy, false)"
+              />
+              <FallOutlined v-else @click="markAsHighRisk(allergy, true)" />
+            </a-tooltip>
+          </div>
         </div>
 
         <DeleteOutlined key="ellipsis" @click="deleteAllergy(allergy.id)" />
@@ -61,6 +80,7 @@
       </a-card-meta>
     </a-card>
   </section>
+
   <div v-else>
     <Loading v-if="isLoading" />
     <a-empty v-else class="mt-90" />
@@ -97,10 +117,12 @@ import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
 import { isUserTheAdmin } from "@/composables/isAdmin";
 import { allergiesService } from "@/services/allergies";
+import FAQ from "@/components/FAQ.vue";
 
 export default defineComponent({
   name: "Dashboard",
   components: {
+    FAQ,
     Header,
     Loading,
     EditOutlined,
@@ -117,11 +139,14 @@ export default defineComponent({
     const total = ref(0);
     const pageSize = ref(1);
     const searchTerm = ref("");
+    const visible = ref<boolean>(false);
     const size = ref<SizeType>("large");
 
     const currentUser = computed(() => store.state.auth.user.name);
     const isLoading = computed(() => store.state.allergies.isLoading);
     const allergies = computed(() => store.state.allergies.allAllergies);
+
+    const showDrawer = () => (visible.value = true);
 
     const fetchAllAllergies = () =>
       store.dispatch("allergies/fetchAllergies", {
@@ -198,9 +223,11 @@ export default defineComponent({
       total,
       currentUser,
       isAdmin,
+      visible,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,
+      showDrawer,
     };
   },
   inheritAttrs: false,

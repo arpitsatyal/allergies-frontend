@@ -13,9 +13,8 @@ export default defineComponent({
     CreateAllergy,
   },
   setup() {
-    let paramId = router.currentRoute.value.params.id as string;
     return {
-      paramId,
+      paramId: router.currentRoute.value.params.id as string,
     };
   },
 });
