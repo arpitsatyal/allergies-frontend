@@ -6,7 +6,12 @@
     <template #extra>
       <div class="headerFlex">
         <div>
-          <a-button type="primary" @click="showDrawer">FAQ</a-button>
+          <a-button
+            type="primary"
+            style="width: 100px; margin-top: 8px"
+            @click="showDrawer"
+            >FAQ</a-button
+          >
           <a-drawer
             v-model:visible="visible"
             class="custom-class"

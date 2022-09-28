@@ -51,7 +51,7 @@
         </router-link>
 
         <div id="components-a-tooltip-demo-color">
-          <a-tooltip title="use arrow buttons to change risks." color="pink">
+          <a-tooltip title="use this button to change risks." color="pink">
             <RiseOutlined
               v-if="allergy.highRisk"
               @click="markAsHighRisk(allergy, false)"
