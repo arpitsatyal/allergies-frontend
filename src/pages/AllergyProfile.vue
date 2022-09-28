@@ -1,5 +1,6 @@
 <template>
   <Header />
+  <a-button type="primary" class="mb-20 ml-20" @click="goBack">Go Back</a-button>
   <div v-if="allergy.name">
     <section class="profile">
       <header class="header">
@@ -57,6 +58,7 @@ import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 import router from "@/router";
 import Header from "../components/Header.vue";
 import { parseDate } from "../utils/parseDate";
+import { goBack } from "@/composables/goBack";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
@@ -98,6 +100,7 @@ export default defineComponent({
       paramId,
       allergy,
       mapSeverity,
+      goBack,
       parseDate,
       getAllergy,
     };
