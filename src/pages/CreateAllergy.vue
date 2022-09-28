@@ -84,7 +84,6 @@
 </template>
 <script lang="ts">
 import { useStore } from "vuex";
-import { useToast } from "vue-toastification";
 import { UploadOutlined } from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, watch, computed } from "vue";
 
@@ -93,6 +92,7 @@ import { debounce } from "@/utils/debounce";
 import Header from "@/components/Header.vue";
 import { getFromStore } from "../utils/store";
 import { goBack } from "../composables/goBack";
+import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { allergiesService } from "@/services/allergies";
 import { IAllergy, IAllergyResponse } from "@/types/allergies";
@@ -108,7 +108,7 @@ export default defineComponent({
     Header,
   },
   setup(props) {
-    const toast = useToast();
+    const toast = new ToastService();
     const loading = ref<boolean>(false);
 
     let iData: string;
@@ -126,6 +126,7 @@ export default defineComponent({
     });
 
     const formState = reactive<Record<string, any>>({});
+
     function handleChange(info: any) {
       if (info.file.status === "done") {
         iData = info.file.response;
@@ -136,7 +137,6 @@ export default defineComponent({
 
     const onFinish = (values: IAllergy) => {
       loading.value = true;
-
       const { image, ...allergyData } = values;
       if (props.paramId) {
         allergiesService
@@ -178,12 +178,14 @@ export default defineComponent({
     watch(
       formState,
       debounce(() => {
-        store.dispatch("allergies/searchAllergies", formState.name);
-        const allNamedAllergies = store.state.allergies.allAllergies.map(
-          (allergy: IAllergyResponse) => allergy.name
-        );
-        if (allNamedAllergies.includes(formState.name.toLowerCase())) {
-          toast.warning("this allergy is already added!");
+        if (formState.name) {
+          store.dispatch("allergies/searchAllergies", formState.name);
+          const allNamedAllergies = store.state.allergies.allAllergies.map(
+            (allergy: IAllergyResponse) => allergy.name
+          );
+          if (allNamedAllergies.includes(formState.name.toLowerCase())) {
+            toast.warning("this allergy is already added!");
+          }
         }
       })
     );

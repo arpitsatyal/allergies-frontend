@@ -4,6 +4,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
+import router from "@/router";
 import CreateAllergy from "./CreateAllergy.vue";
 
 export default defineComponent({
@@ -11,7 +13,7 @@ export default defineComponent({
     CreateAllergy,
   },
   setup() {
-    const paramId = new URL(location.href).pathname.split("/")[2];
+    let paramId = router.currentRoute.value.params.id as string;
     return {
       paramId,
     };

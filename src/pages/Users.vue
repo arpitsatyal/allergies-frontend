@@ -1,7 +1,7 @@
 <template>
   <Header />
   <a-button type="primary" class="mt-30 ml-20" @click="goBack">Go Back</a-button>
-  <div class="mt-30">
+  <div class="mt-30" v-if="!loading">
     <h3 class="center">All users</h3>
 
     <table class="mt-30">
@@ -21,34 +21,45 @@
       </template>
     </table>
   </div>
+  <Loading v-else />
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 
 import { IUser } from "@/types/auth";
+import Header from "@/components/Header.vue";
 import { goBack } from "@/composables/goBack";
 import { authService } from "@/services/auth";
-import Header from "@/components/Header.vue";
+import Loading from "@/components/Loading.vue";
 import { toastError } from "@/utils/toastError";
 
 export default defineComponent({
   name: "Users",
   components: {
     Header,
+    Loading,
   },
 
   setup() {
+    const loading = ref(false);
     const users = ref<IUser[]>([]);
 
     function fetchAllUsers() {
+      loading.value = true;
       authService
         .getAllUsers()
-        .then((data) => (users.value = data))
-        .catch((err) => toastError(err));
+        .then((data) => {
+          loading.value = false;
+          users.value = data;
+        })
+        .catch((err) => {
+          loading.value = false;
+          toastError(err);
+        });
     }
     onMounted(() => fetchAllUsers());
-    return { users, goBack };
+    return { users, loading, goBack };
   },
 });
 </script>

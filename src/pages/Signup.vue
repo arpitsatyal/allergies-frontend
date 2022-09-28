@@ -40,11 +40,11 @@
 
 <script lang="ts">
 import { useStore } from "vuex";
-import { useToast } from "vue-toastification";
 import { defineComponent, ref } from "@vue/runtime-core";
 
 import router from "@/router";
 import { authService } from "../services/auth";
+import { ToastService } from "../services/toast";
 import { toastError } from "../utils/toastError";
 
 export default defineComponent({
@@ -58,8 +58,8 @@ export default defineComponent({
     const password = ref<string>("");
 
     const loading = ref<boolean>(false);
-    const toast = useToast();
     const store = useStore();
+    const toast = new ToastService();
 
     function onSubmit(e: Event) {
       e.preventDefault();

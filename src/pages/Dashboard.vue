@@ -5,7 +5,11 @@
     <a-button type="primary" shape="round" :size="size">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
-    <h2 class="center">Welcome, {{ currentUser }}</h2>
+    <h2 class="center" v-if="currentUser">
+      Welcome,
+      <span v-if="isAdmin">admin ;)</span>
+      {{ currentUser }}
+    </h2>
   </div>
   <div class="mt-30 center">
     <a-form-item name="searchTerm">
@@ -75,7 +79,6 @@
 
 <script lang="ts">
 import { useStore } from "vuex";
-import { useToast } from "vue-toastification";
 import type { SizeType } from "ant-design-vue/es/config-provider";
 import { defineComponent, ref, onMounted, computed, watch } from "@vue/runtime-core";
 import {
@@ -89,8 +92,10 @@ import router from "@/router";
 import Header from "@/components/Header.vue";
 import { debounce } from "../utils/debounce";
 import Loading from "../components/Loading.vue";
+import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
+import { isUserTheAdmin } from "@/composables/isAdmin";
 import { allergiesService } from "@/services/allergies";
 
 export default defineComponent({
@@ -104,14 +109,15 @@ export default defineComponent({
     FallOutlined,
   },
   setup() {
-    const toast = useToast();
     const store = useStore();
+    const toast = new ToastService();
+    const isAdmin = isUserTheAdmin();
+
+    const page = ref(1);
+    const total = ref(0);
+    const pageSize = ref(1);
     const searchTerm = ref("");
     const size = ref<SizeType>("large");
-
-    const total = ref<number | null>(null);
-    const page = ref(1);
-    const pageSize = ref(1);
 
     const currentUser = computed(() => store.state.auth.user.name);
     const isLoading = computed(() => store.state.allergies.isLoading);
@@ -139,11 +145,9 @@ export default defineComponent({
       allergiesService
         .markAsHighRisk(isHighRisk, allergy.id)
         .then(() => {
-          if (isHighRisk) {
-            toast.success(`Allergy ${allergy.name} marked as high risk.`);
-          } else {
-            toast.warning(`Allergy ${allergy.name} un-marked as high risk.`);
-          }
+          isHighRisk
+            ? toast.success(`${allergy.name} is now marked as high risk.`)
+            : toast.warning(`${allergy.name} is no longer marked as high risk.`);
           fetchAllAllergies();
         })
         .catch((err) => toastError(err));
@@ -193,6 +197,7 @@ export default defineComponent({
       pageSize,
       total,
       currentUser,
+      isAdmin,
       deleteAllergy,
       markAsHighRisk,
       goToProfile,

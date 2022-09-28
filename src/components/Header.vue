@@ -1,6 +1,6 @@
 <template>
   <a-page-header
-    @click="goToDashboard"
+    @click="router.push('/dashboard')"
     style="border: 1px solid rgb(235, 237, 240)"
     class="pointer"
     title="Allergies Management"
@@ -13,11 +13,9 @@
           </template>
           <template #title>Settings</template>
           <a-menu-item-group title="Actions">
-            <div v-if="isAdmin">
-              <router-link :to="{ name: 'Users' }">
-                <a-menu-item>All Users</a-menu-item>
-              </router-link>
-            </div>
+            <a-menu-item v-if="isAdmin" @click="router.push('/users')"
+              >All Users</a-menu-item
+            >
             <a-menu-item @click="logout">Logout</a-menu-item>
           </a-menu-item-group>
         </a-sub-menu>
@@ -29,11 +27,11 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
+import { SettingOutlined } from "@ant-design/icons-vue";
 
 import router from "@/router";
 import { logout } from "@/utils/logout";
 import { isUserTheAdmin } from "../composables/isAdmin";
-import { SettingOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
   name: "Header",
@@ -44,13 +42,10 @@ export default defineComponent({
   setup() {
     const isAdmin = isUserTheAdmin();
 
-    function goToDashboard() {
-      router.push("/dashboard");
-    }
     return {
+      router,
       isAdmin,
       logout,
-      goToDashboard,
     };
   },
 });

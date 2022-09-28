@@ -52,9 +52,9 @@
 </template>
 
 <script lang="ts">
-import { useToast } from "vue-toastification";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
+import router from "@/router";
 import Header from "../components/Header.vue";
 import { parseDate } from "../utils/parseDate";
 import Loading from "../components/Loading.vue";
@@ -68,7 +68,6 @@ export default defineComponent({
     Loading,
   },
   setup() {
-    const toast = useToast();
     const allergy = ref<IAllergyResponse>({
       name: "",
       severity: "",
@@ -78,7 +77,7 @@ export default defineComponent({
       createdAt: new Date(),
       id: 0,
     });
-    const paramId = new URL(location.href).pathname.split("/")[2];
+    const paramId = router.currentRoute.value.params.id as string;
 
     const mapSeverity = ref<any>({
       Low: 25,
@@ -89,17 +88,13 @@ export default defineComponent({
     function getAllergy() {
       allergiesService
         .getAllergy(+paramId)
-        .then((data) => {
-          if (data) {
-            allergy.value = data;
-          }
-        })
+        .then((data) => (allergy.value = data))
         .catch((err) => toastError(err));
     }
 
     onMounted(() => getAllergy());
+
     return {
-      toast,
       paramId,
       allergy,
       mapSeverity,

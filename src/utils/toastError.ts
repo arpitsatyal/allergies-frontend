@@ -1,7 +1,7 @@
-import { useToast } from "vue-toastification";
-const toast = useToast();
+import { ToastService } from "./../services/toast";
 
 export function toastError(error: any) {
+  const toast = new ToastService();
   const errorFromBE = error.response.data.error;
 
   if (errorFromBE) {
