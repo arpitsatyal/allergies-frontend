@@ -28,89 +28,96 @@
       </header>
     </section>
 
-    <section>
-      <h3 class="center mx-20">Symptoms</h3>
-      <template v-if="allergy.symptoms && allergy.symptoms.length">
-        <table>
-          <thead class="center">
-            <tr class="table-headers">
-              <th>Name</th>
-              <th>Date added</th>
-            </tr>
-          </thead>
-          <template :key="alg" v-for="alg in allergy.symptoms">
-            <tbody class="center">
-              <td>{{ alg }}</td>
-              <td>{{ parseDate(allergy.createdAt) }}</td>
-            </tbody>
-          </template>
-        </table>
-      </template>
-      <p v-else class="center">There are no symptoms added for this allergy yet.</p>
-    </section>
-
-    <h3 class="center mx-30">Comments</h3>
-    <p class="center" v-if="!allergy.comments.length">
-      You can add comments regarding the allergy here.
-    </p>
-    <div class="absolute comments">
-      <div v-if="allergy.comments.length">
-        <a-comment v-for="comment in allergy.comments.reverse()" :key="comment">
-          <template #author
-            ><p class="fw-14">{{ comment.addedBy }}</p></template
-          >
-          <template #avatar>
-            <a-avatar src="https://joeschmoe.io/api/v1/random" :alt="comment.addedBy" />
-          </template>
-          <template #content>
-            <div class="commentFlex">
-              <p class="fw-14 overflow-auto text-justify">
-                {{ comment.comment }}
-              </p>
-
-              <DeleteOutlined @click="deleteComment(comment.comment)" class="ml-10" />
-            </div>
-          </template>
-
-          <template #datetime>
-            <a-tooltip>
-              <span style="color: #4ecdc4" class="fw-14">{{
-                parseDate(comment.createdAt)
-              }}</span>
-            </a-tooltip>
-          </template>
-        </a-comment>
+    <div class="main">
+      <div class="symptomsDiv">
+        <h3 :style="{ margin: '16px 0' }" class="center">Symptoms</h3>
+        <div v-if="allergy.symptoms.length">
+          <a-list size="large" bordered :data-source="allergy.symptoms">
+            <template #renderItem="{ item }">
+              <a-list-item>{{ item }}</a-list-item>
+            </template>
+          </a-list>
+        </div>
+        <p class="center mt-90 ml-10" v-else>
+          no symptomps have been added for this allergy yet.
+        </p>
       </div>
+      <div class="commentsDiv">
+        <h3 class="center mx-30 mr-120">Comments</h3>
+        <p class="center" v-if="!allergy.comments.length">
+          You can add comments regarding the allergy here.
+        </p>
+        <div class="absolute comments">
+          <div v-if="allergy.comments.length">
+            <a-comment v-for="comment in allergy.comments" :key="comment">
+              <template #author
+                ><p class="fw-14">{{ comment.addedBy }}</p></template
+              >
+              <template #avatar>
+                <a-avatar
+                  src="https://joeschmoe.io/api/v1/random"
+                  :alt="comment.addedBy"
+                />
+              </template>
+              <template #content>
+                <div class="commentFlex">
+                  <p
+                    class="fw-14 overflow-auto text-justify"
+                    v-if="comment.comment.length > 500"
+                  >
+                    {{ comment.comment.substring(0, 500) }}....
+                  </p>
+                  <p class="fw-14 overflow-auto text-justify" v-else>
+                    {{ comment.comment }}
+                  </p>
 
-      <a-form-item name="comment" class="mt-20 relative">
-        <a-textarea
-          v-model:value="comment"
-          style="width: 100%"
-          placeholder="Please add your comment"
-          allow-clear
-        />
-        <a-button
-          type="primary"
-          class="ml-10 absolute"
-          style="top: 20px"
-          v-if="loading"
-          loading
-          >Loading</a-button
-        >
-        <a-button
-          type="primary"
-          class="ml-10 absolute"
-          style="top: 20px"
-          @click="addComment"
-          >Add</a-button
-        >
-      </a-form-item>
+                  <DeleteOutlined @click="deleteComment(comment.comment)" class="ml-20" />
+                </div>
+              </template>
+
+              <template #datetime>
+                <a-tooltip>
+                  <span style="color: #4ecdc4" class="fw-14">{{
+                    parseDate(comment.createdAt)
+                  }}</span>
+                </a-tooltip>
+              </template>
+            </a-comment>
+          </div>
+
+          <a-form-item name="comment" class="mt-20 relative">
+            <a-textarea
+              v-model:value="comment"
+              style="width: 100%"
+              placeholder="add your comment"
+              allow-clear
+            />
+            <a-button
+              type="primary"
+              class="ml-10 absolute"
+              style="top: 20px"
+              v-if="loading"
+              loading
+              >Loading</a-button
+            >
+            <a-button
+              type="primary"
+              v-else
+              class="ml-10 absolute"
+              style="top: 20px"
+              @click="addComment"
+              >Add</a-button
+            >
+          </a-form-item>
+        </div>
+      </div>
     </div>
   </div>
   <Loading v-else />
 </template>
 
 <script lang="ts">
+import { notification } from "ant-design-vue";
 import { DeleteOutlined } from "@ant-design/icons-vue";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
@@ -119,7 +126,6 @@ import Header from "../components/Header.vue";
 import { parseDate } from "../utils/parseDate";
 import { goBack } from "@/composables/goBack";
 import Loading from "../components/Loading.vue";
-import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
@@ -145,7 +151,6 @@ export default defineComponent({
 
     const comment = ref("");
     const loading = ref(false);
-    const toast = new ToastService();
     const paramId = router.currentRoute.value.params.id as string;
 
     const mapSeverity = ref<any>({
@@ -171,7 +176,7 @@ export default defineComponent({
         .then(() => {
           loading.value = false;
           comment.value = "";
-          toast.success("comment added successfully");
+          notification.success({ message: "Comment added!" });
           getAllergy();
         })
         .catch((err) => {
@@ -186,7 +191,7 @@ export default defineComponent({
         .deleteComment(comment, +paramId)
         .then(() => {
           loading.value = false;
-          toast.warning("comment deleted successfully");
+          notification.error({ message: "Comment deleted!" });
           getAllergy();
         })
         .catch((err) => {
@@ -225,5 +230,19 @@ export default defineComponent({
 .commentFlex {
   display: flex;
   justify-content: space-between;
+}
+.main {
+  display: flex;
+  box-sizing: border-box;
+
+  .commentsDiv {
+    width: 80%;
+    margin-top: 10px;
+  }
+  .symptomsDiv {
+    width: 20%;
+    margin-top: 20px;
+    margin-left: 20px;
+  }
 }
 </style>
