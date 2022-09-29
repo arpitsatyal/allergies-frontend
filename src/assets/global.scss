@@ -48,7 +48,12 @@
   justify-content: space-around;
   gap: 100px;
 }
-
+.overflow-auto {
+  overflow: auto;
+}
+.text-justify {
+  text-align: justify;
+}
 .card {
   display: flex;
   justify-content: center;

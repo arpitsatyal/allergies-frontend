@@ -64,7 +64,7 @@
           </template>
           <template #content>
             <div class="commentFlex">
-              <p class="fw-14">
+              <p class="fw-14 overflow-auto text-justify">
                 {{ comment.comment }}
               </p>
 
@@ -218,7 +218,8 @@ export default defineComponent({
 @import "../assets/profile.scss";
 .comments {
   margin: 0;
-  left: 42%;
+  width: 60%;
+  left: 25%;
   transform: translateY(-2%);
 }
 .commentFlex {
