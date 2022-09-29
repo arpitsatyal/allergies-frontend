@@ -40,7 +40,7 @@
             </template>
           </a-list>
         </div>
-        <p class="center mt-30 ml-10" v-else>
+        <p class="center mt-30 ml-10 no-allergies" v-else>
           no symptoms have been added for this allergy yet.
         </p>
       </div>
@@ -87,7 +87,7 @@
 
                   <DeleteOutlined
                     v-if="currentUser === comment.addedBy.id"
-                    @click="deleteComment(comment.comment)"
+                    @click="deleteComment(comment.comment, comment.createdAt)"
                     class="ml-20"
                   />
                 </div>
@@ -142,13 +142,14 @@ import { DeleteOutlined } from "@ant-design/icons-vue";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
-import Header from "../components/Header.vue";
-import { goBack } from "@/composables/goBack";
 import { getFromStore } from "@/utils/store";
+import { goBack } from "@/composables/goBack";
+import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
+
 dayjs.extend(relativeTime);
 
 export default defineComponent({
@@ -208,10 +209,10 @@ export default defineComponent({
         });
     }
 
-    function deleteComment(comment: string) {
+    function deleteComment(comment: string, createdAt: Date) {
       loading.value = true;
       allergiesService
-        .deleteComment(comment, +paramId)
+        .deleteComment({ comment, createdAt }, +paramId)
         .then(() => {
           loading.value = false;
           notification.error({ message: "Comment deleted!" });
@@ -276,5 +277,13 @@ export default defineComponent({
   color: #c67d8a;
   font-weight: bold;
   cursor: pointer;
+}
+@media (max-width: 950px) {
+  .profile-pic {
+    display: none;
+  }
+  .no-allergies {
+    overflow: auto;
+  }
 }
 </style>
