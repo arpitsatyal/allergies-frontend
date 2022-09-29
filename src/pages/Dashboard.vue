@@ -130,7 +130,7 @@ export default defineComponent({
     const searchTerm = ref("");
     const size = ref<SizeType>("large");
 
-    const currentUser = computed(() => store.state.auth.user.name);
+    const currentUser = computed(() => store.state?.auth?.user?.name);
     const isLoading = computed(() => store.state.allergies.isLoading);
     const allergies = computed(() => store.state.allergies.allAllergies);
 

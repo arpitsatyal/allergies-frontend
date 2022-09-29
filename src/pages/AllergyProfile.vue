@@ -55,7 +55,7 @@
     </p>
     <div class="absolute comments">
       <div v-if="allergy.comments.length">
-        <a-comment v-for="comment in allergy.comments" :key="comment">
+        <a-comment v-for="comment in allergy.comments.reverse()" :key="comment">
           <template #author
             ><p class="fw-14">{{ comment.addedBy }}</p></template
           >
@@ -63,9 +63,13 @@
             <a-avatar src="https://joeschmoe.io/api/v1/random" :alt="comment.addedBy" />
           </template>
           <template #content>
-            <p class="fw-14">
-              {{ comment.comment }}
-            </p>
+            <div class="commentFlex">
+              <p class="fw-14">
+                {{ comment.comment }}
+              </p>
+
+              <DeleteOutlined @click="deleteComment(comment.comment)" class="ml-10" />
+            </div>
           </template>
 
           <template #datetime>
@@ -81,10 +85,18 @@
       <a-form-item name="comment" class="mt-20 relative">
         <a-textarea
           v-model:value="comment"
+          style="width: 100%"
           placeholder="Please add your comment"
           allow-clear
         />
-        <a-button type="primary" class="ml-10" v-if="loading" loading>Loading</a-button>
+        <a-button
+          type="primary"
+          class="ml-10 absolute"
+          style="top: 20px"
+          v-if="loading"
+          loading
+          >Loading</a-button
+        >
         <a-button
           type="primary"
           class="ml-10 absolute"
@@ -99,6 +111,7 @@
 </template>
 
 <script lang="ts">
+import { DeleteOutlined } from "@ant-design/icons-vue";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
@@ -115,6 +128,7 @@ export default defineComponent({
   components: {
     Header,
     Loading,
+    DeleteOutlined,
   },
   setup() {
     const allergy = ref<IAllergyResponse>({
@@ -144,7 +158,10 @@ export default defineComponent({
       allergiesService
         .getAllergy(+paramId)
         .then((data) => (allergy.value = data))
-        .catch((err) => toastError(err));
+        .catch((err) => {
+          toastError(err);
+          router.push("/dashboard");
+        });
     }
 
     function addComment() {
@@ -155,6 +172,21 @@ export default defineComponent({
           loading.value = false;
           comment.value = "";
           toast.success("comment added successfully");
+          getAllergy();
+        })
+        .catch((err) => {
+          loading.value = false;
+          toastError(err);
+        });
+    }
+
+    function deleteComment(comment: string) {
+      loading.value = true;
+      allergiesService
+        .deleteComment(comment, +paramId)
+        .then(() => {
+          loading.value = false;
+          toast.warning("comment deleted successfully");
           getAllergy();
         })
         .catch((err) => {
@@ -175,6 +207,7 @@ export default defineComponent({
       parseDate,
       getAllergy,
       addComment,
+      deleteComment,
     };
   },
 });
@@ -185,7 +218,11 @@ export default defineComponent({
 @import "../assets/profile.scss";
 .comments {
   margin: 0;
-  left: 25%;
+  left: 42%;
   transform: translateY(-2%);
+}
+.commentFlex {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

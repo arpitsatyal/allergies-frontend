@@ -29,6 +29,9 @@ const allergiesRequests = {
 
   addComment: (url: string, comment: string) =>
     instance.put<IAllergyResponse>(url, { comment }).then(responseBody),
+
+    deleteComment: (url: string, comment: string) =>
+    instance.put<IAllergyResponse>(url, { comment }).then(responseBody),
 };
 
 export const allergiesService = {
@@ -55,4 +58,8 @@ export const allergiesService = {
 
   addComment: (comment: string, id: number): Promise<IAllergyResponse> =>
     allergiesRequests.addComment(`/allergies/add-comment/${id}`, comment),
+
+
+  deleteComment: (comment: string, id: number): Promise<IAllergyResponse> =>
+  allergiesRequests.deleteComment(`/allergies/delete-comment/${id}`, comment),
 };
