@@ -44,19 +44,19 @@
       </div>
       <div class="commentsDiv">
         <h3 class="center mx-30 mr-120">Comments</h3>
-        <p class="center" v-if="!allergy.comments.length">
+        <p class="center mr-120" v-if="!allergy.comments.length">
           You can add comments regarding the allergy here.
         </p>
         <div class="absolute comments">
           <div v-if="allergy.comments.length">
             <a-comment v-for="comment in allergy.comments" :key="comment">
               <template #author
-                ><p class="fw-14">{{ comment.addedBy }}</p></template
+                ><p class="fw-16">{{ comment.addedBy.name }}</p></template
               >
               <template #avatar>
                 <a-avatar
                   src="https://joeschmoe.io/api/v1/random"
-                  :alt="comment.addedBy"
+                  :alt="comment.addedBy.id"
                 />
               </template>
               <template #content>
@@ -71,14 +71,18 @@
                     {{ comment.comment }}
                   </p>
 
-                  <DeleteOutlined @click="deleteComment(comment.comment)" class="ml-20" />
+                  <DeleteOutlined
+                    v-if="currentUser === comment.addedBy.id"
+                    @click="deleteComment(comment.comment)"
+                    class="ml-20"
+                  />
                 </div>
               </template>
 
               <template #datetime>
                 <a-tooltip>
                   <span style="color: #4ecdc4" class="fw-14">{{
-                    parseDate(comment.createdAt)
+                    dayjs(comment.createdAt).fromNow()
                   }}</span>
                 </a-tooltip>
               </template>
@@ -117,18 +121,21 @@
 </template>
 
 <script lang="ts">
+import dayjs from "dayjs";
 import { notification } from "ant-design-vue";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { DeleteOutlined } from "@ant-design/icons-vue";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
 import Header from "../components/Header.vue";
-import { parseDate } from "../utils/parseDate";
 import { goBack } from "@/composables/goBack";
+import { getFromStore } from "@/utils/store";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
+dayjs.extend(relativeTime);
 
 export default defineComponent({
   components: {
@@ -151,6 +158,7 @@ export default defineComponent({
 
     const comment = ref("");
     const loading = ref(false);
+    const currentUser = getFromStore("user");
     const paramId = router.currentRoute.value.params.id as string;
 
     const mapSeverity = ref<any>({
@@ -208,8 +216,9 @@ export default defineComponent({
       comment,
       loading,
       mapSeverity,
+      currentUser,
+      dayjs,
       goBack,
-      parseDate,
       getAllergy,
       addComment,
       deleteComment,
