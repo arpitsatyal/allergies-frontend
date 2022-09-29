@@ -54,7 +54,7 @@
           <div v-if="allergy.comments.length">
             <a-comment v-for="comment in allergy.comments" :key="comment">
               <template #author
-                ><p class="fw-16">{{ comment.addedBy.name }}</p></template
+                ><p class="fw-16 black">{{ comment.addedBy.name }}</p></template
               >
               <template #avatar>
                 <a-avatar
@@ -66,10 +66,21 @@
                 <div class="commentFlex">
                   <p
                     class="fw-14 overflow-auto text-justify"
-                    v-if="comment.comment.length > 500"
+                    v-if="comment.comment.length > 500 && !seeMore"
                   >
-                    {{ comment.comment.substring(0, 500) }}....
+                    {{ comment.comment.substring(0, 500) }}
+                    <span class="handleSee" @click="handleSee">see more</span>
                   </p>
+
+                  <p
+                    class="fw-14 overflow-auto text-justify"
+                    v-else-if="comment.comment.length > 500 && seeMore"
+                  >
+                    {{ comment.comment.substring(0, comment.comment.length) }}
+
+                    <span class="handleSee" @click="handleSee">see less</span>
+                  </p>
+
                   <p class="fw-14 overflow-auto text-justify" v-else>
                     {{ comment.comment }}
                   </p>
@@ -161,6 +172,7 @@ export default defineComponent({
 
     const comment = ref("");
     const loading = ref(false);
+    const seeMore = ref(false);
     const currentUser = getFromStore("user");
     const paramId = router.currentRoute.value.params.id as string;
 
@@ -210,6 +222,7 @@ export default defineComponent({
           toastError(err);
         });
     }
+    const handleSee = () => (seeMore.value = !seeMore.value);
 
     onMounted(() => getAllergy());
 
@@ -221,6 +234,8 @@ export default defineComponent({
       mapSeverity,
       currentUser,
       dayjs,
+      seeMore,
+      handleSee,
       goBack,
       getAllergy,
       addComment,
@@ -256,5 +271,10 @@ export default defineComponent({
     margin-top: 20px;
     margin-left: 20px;
   }
+}
+.handleSee {
+  color: #c67d8a;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
