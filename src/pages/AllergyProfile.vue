@@ -1,47 +1,50 @@
 <template>
   <Header />
-  <a-button type="primary" class="mb-20 ml-20" @click="goBack">Go Back</a-button>
+  <div class="mb-10">
+    <a-button type="primary" class="ml-20" @click="goBack">Go Back</a-button>
+    <h1 class="heading pt-7 inline-block center" style="margin-left: 38vw">
+      {{ allergy.name }}
+    </h1>
+  </div>
   <div v-if="allergy.name" class="relative">
     <section class="profile">
       <header class="header">
-        <div class="center flex">
-          <div>
-            <img
-              v-if="allergy.image"
-              :src="allergy.image"
-              :alt="allergy.name"
-              class="profile-pic"
-            />
-            <img
-              v-else
-              src="@/assets/images/default.jpg"
-              :alt="allergy.name"
-              class="profile-pic"
-            />
-            <h1 class="heading pt-7">{{ allergy.name }}</h1>
-          </div>
-          <div>
-            <a-progress type="circle" :percent="mapSeverity[allergy.severity]" />
-            <h2 class="heading">Severity: {{ allergy.severity }}</h2>
-          </div>
+        <div class="center">
+          <a-progress type="circle" :percent="mapSeverity[allergy.severity]" />
+          <h2 class="heading">Severity: {{ allergy.severity }}</h2>
         </div>
       </header>
     </section>
 
     <div class="main">
       <div class="symptomsDiv">
-        <h3 :style="{ margin: '16px 0' }" class="center">Symptoms</h3>
-        <div v-if="allergy.symptoms.length">
+        <div>
+          <img
+            v-if="allergy.image"
+            :src="allergy.image"
+            :alt="allergy.name"
+            class="profile-pic"
+          />
+          <img
+            v-else
+            src="@/assets/images/default.jpg"
+            :alt="allergy.name"
+            class="profile-pic"
+          />
+          <h3 :style="{ margin: '15px' }">Symptoms</h3>
+        </div>
+        <div v-if="allergy.symptoms.length" class="mt-20">
           <a-list size="large" bordered :data-source="allergy.symptoms">
             <template #renderItem="{ item }">
               <a-list-item>{{ item }}</a-list-item>
             </template>
           </a-list>
         </div>
-        <p class="center mt-90 ml-10" v-else>
-          no symptomps have been added for this allergy yet.
+        <p class="center mt-30 ml-10" v-else>
+          no symptoms have been added for this allergy yet.
         </p>
       </div>
+
       <div class="commentsDiv">
         <h3 class="center mx-30 mr-120">Comments</h3>
         <p class="center mr-120" v-if="!allergy.comments.length">
@@ -56,7 +59,7 @@
               <template #avatar>
                 <a-avatar
                   src="https://joeschmoe.io/api/v1/random"
-                  :alt="comment.addedBy.id"
+                  :alt="comment.addedBy.name"
                 />
               </template>
               <template #content>
