@@ -1,25 +1,21 @@
 <template>
   <Header />
   <a-button type="primary" class="mt-30 ml-20" @click="goBack">Go Back</a-button>
+  <h3 class="center">All users</h3>
   <div class="mt-30" v-if="!loading">
-    <h3 class="center">All users</h3>
-
-    <table class="mt-30">
-      <thead class="center">
-        <tr class="table-headers">
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-        </tr>
-      </thead>
-      <template :key="user" v-for="user in users">
-        <tbody class="center" :class="{ active: user.role === 'admin' }">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-        </tbody>
+    <a-table :dataSource="users" :columns="columns" :pagination="false">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'name'">
+          <span :class="{ active: record.role === 'admin' }">{{ record.name }}</span>
+        </template>
+        <template v-if="column.key === 'email'">
+          <span :class="{ active: record.role === 'admin' }">{{ record.email }}</span>
+        </template>
+        <template v-if="column.key === 'role'">
+          <span :class="{ active: record.role === 'admin' }">{{ record.role }}</span>
+        </template>
       </template>
-    </table>
+    </a-table>
   </div>
   <Loading v-else />
 </template>
@@ -45,6 +41,27 @@ export default defineComponent({
     const loading = ref(false);
     const users = ref<IUser[]>([]);
 
+    const columns = [
+      {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+        align: "center",
+      },
+      {
+        title: "Email",
+        dataIndex: "email",
+        key: "email",
+        align: "center",
+      },
+      {
+        title: "Role",
+        dataIndex: "role",
+        key: "role",
+        align: "center",
+      },
+    ];
+
     function fetchAllUsers() {
       loading.value = true;
       authService
@@ -59,7 +76,8 @@ export default defineComponent({
         });
     }
     onMounted(() => fetchAllUsers());
-    return { users, loading, goBack };
+
+    return { users, loading, columns, goBack };
   },
 });
 </script>
