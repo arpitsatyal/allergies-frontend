@@ -78,10 +78,7 @@
     <a-empty v-else class="mt-90" />
   </div>
   <div class="mt-30 center">
-    <a-spin v-if="isLoading" />
-
     <a-pagination
-      v-else
       show-size-changer
       v-model:current="page"
       v-model:pageSize="pageSize"
