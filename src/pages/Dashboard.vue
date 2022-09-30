@@ -83,7 +83,7 @@
       show-size-changer
       v-model:current="page"
       v-model:pageSize="pageSize"
-      :total="total + 1"
+      :total="total"
     />
     <a-spin v-else />
   </div>
@@ -124,6 +124,7 @@ export default defineComponent({
     const store = useStore();
     const toast = new ToastService();
     const isAdmin = isUserTheAdmin();
+
     const page = ref(1);
     const total = ref(0);
     const pageSize = ref(3);

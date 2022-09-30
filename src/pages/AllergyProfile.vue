@@ -23,14 +23,39 @@
             v-if="allergy.image"
             :src="allergy.image"
             :alt="allergy.name"
-            class="profile-pic"
+            class="profile-pic pointer"
+            @click="showModal"
           />
           <img
             v-else
             src="@/assets/images/default.jpg"
             :alt="allergy.name"
-            class="profile-pic"
+            @click="showModal"
+            class="profile-pic pointer"
           />
+
+          <a-modal
+            v-model:visible="visible"
+            width="100%"
+            wrap-class-name="full-modal"
+            :title="allergy.name"
+            class="center"
+            @ok="handleOk"
+          >
+            <img
+              :src="allergy.image"
+              :alt="allergy.name"
+              class="zoom-pic"
+              v-if="allergy.image"
+            />
+            <img
+              src="@/assets/images/default.jpg"
+              :alt="allergy.name"
+              class="zoom-pic"
+              v-else
+            />
+          </a-modal>
+
           <h3 :style="{ margin: '15px' }">Symptoms</h3>
         </div>
         <div v-if="allergy.symptoms.length" class="mt-20">
@@ -87,7 +112,7 @@
 
                   <DeleteOutlined
                     v-if="currentUser === comment.addedBy.id"
-                    @click="deleteComment(comment.comment, comment.createdAt)"
+                    @click="deleteComment(comment)"
                     class="ml-20"
                   />
                 </div>
@@ -147,7 +172,7 @@ import { goBack } from "@/composables/goBack";
 import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
-import { IAllergyResponse } from "@/types/allergies";
+import { IAllergyResponse, IComment } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
 
 dayjs.extend(relativeTime);
@@ -174,6 +199,7 @@ export default defineComponent({
     const comment = ref("");
     const loading = ref(false);
     const seeMore = ref(false);
+    const visible = ref(false);
     const currentUser = getFromStore("user");
     const paramId = router.currentRoute.value.params.id as string;
 
@@ -209,21 +235,29 @@ export default defineComponent({
         });
     }
 
-    function deleteComment(comment: string, createdAt: Date) {
+    function deleteComment(commentData: Partial<IComment>) {
+      const { comment, createdAt } = commentData;
       loading.value = true;
-      allergiesService
-        .deleteComment({ comment, createdAt }, +paramId)
-        .then(() => {
-          loading.value = false;
-          notification.error({ message: "Comment deleted!" });
-          getAllergy();
-        })
-        .catch((err) => {
-          loading.value = false;
-          toastError(err);
-        });
+      if (comment && createdAt) {
+        allergiesService
+          .deleteComment({ comment, createdAt }, +paramId)
+          .then(() => {
+            loading.value = false;
+            notification.error({ message: "Comment deleted!" });
+            getAllergy();
+          })
+          .catch((err) => {
+            loading.value = false;
+            toastError(err);
+          });
+      }
     }
+
     const handleSee = () => (seeMore.value = !seeMore.value);
+
+    const showModal = () => (visible.value = true);
+
+    const handleOk = () => (visible.value = false);
 
     onMounted(() => getAllergy());
 
@@ -236,11 +270,14 @@ export default defineComponent({
       currentUser,
       dayjs,
       seeMore,
+      visible,
       handleSee,
       goBack,
       getAllergy,
       addComment,
       deleteComment,
+      handleOk,
+      showModal,
     };
   },
 });

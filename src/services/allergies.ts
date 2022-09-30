@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
+
 import instance from "@/utils/axios";
-import { IAllergyResponse, IAllergy } from "../types/allergies";
+import { IAllergyResponse, IAllergy, IComment } from "../types/allergies";
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -20,7 +21,7 @@ const allergiesRequests = {
       })
       .then(responseBody),
 
-  delete: (url: string) => instance.delete<any>(url).then(responseBody),
+  delete: (url: string) => instance.delete<void>(url).then(responseBody),
 
   search: (url: string, searchTerm: string) =>
     instance
@@ -30,7 +31,7 @@ const allergiesRequests = {
   addComment: (url: string, comment: string) =>
     instance.put<IAllergyResponse>(url, { comment }).then(responseBody),
 
-  deleteComment: (url: string, commentData: any) =>
+  deleteComment: (url: string, commentData: Partial<IComment>) =>
     instance.put<IAllergyResponse>(url, commentData).then(responseBody),
 };
 
@@ -46,9 +47,9 @@ export const allergiesService = {
     allergiesRequests.post(`/allergies`, allergy),
   updateAllergy: (allergy: IAllergy, id: number): Promise<IAllergyResponse> =>
     allergiesRequests.put(`/allergies/${id}`, allergy),
-  deleteAllergy: (id: number): Promise<any> =>
+  deleteAllergy: (id: number): Promise<void> =>
     allergiesRequests.delete(`/allergies/${id}`),
-  markAsHighRisk: (body: boolean, id: number): Promise<any> =>
+  markAsHighRisk: (body: boolean, id: number): Promise<IAllergyResponse> =>
     allergiesRequests.markAsHighRisk(
       `/allergies/mark-as-high-risk/${id}`,
       body
@@ -59,7 +60,10 @@ export const allergiesService = {
   addComment: (comment: string, id: number): Promise<IAllergyResponse> =>
     allergiesRequests.addComment(`/allergies/add-comment/${id}`, comment),
 
-  deleteComment: (commentData: any, id: number): Promise<IAllergyResponse> =>
+  deleteComment: (
+    commentData: Partial<IComment>,
+    id: number
+  ): Promise<IAllergyResponse> =>
     allergiesRequests.deleteComment(
       `/allergies/delete-comment/${id}`,
       commentData
