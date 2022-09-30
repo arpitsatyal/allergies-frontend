@@ -1,8 +1,8 @@
 <template>
   <Header />
   <a-button type="primary" class="mt-30 ml-20" @click="goBack">Go Back</a-button>
-  <h3 class="center">All users</h3>
   <div class="mt-30" v-if="!loading">
+    <h3 class="center mb-20">All users</h3>
     <a-table :dataSource="users" :columns="columns" :pagination="false">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">

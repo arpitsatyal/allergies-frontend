@@ -31,7 +31,7 @@ const allergiesRequests = {
   addComment: (url: string, comment: string) =>
     instance.put<IAllergyResponse>(url, { comment }).then(responseBody),
 
-  deleteComment: (url: string, commentData: Partial<IComment>) =>
+  deleteComment: (url: string, commentData: Omit<IComment, "addedBy">) =>
     instance.put<IAllergyResponse>(url, commentData).then(responseBody),
 };
 
@@ -61,7 +61,7 @@ export const allergiesService = {
     allergiesRequests.addComment(`/allergies/add-comment/${id}`, comment),
 
   deleteComment: (
-    commentData: Partial<IComment>,
+    commentData: Omit<IComment, "addedBy">,
     id: number
   ): Promise<IAllergyResponse> =>
     allergiesRequests.deleteComment(

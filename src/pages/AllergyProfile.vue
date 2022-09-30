@@ -40,6 +40,7 @@
             wrap-class-name="full-modal"
             :title="allergy.name"
             class="center"
+            cancelText="Close"
             @ok="handleOk"
           >
             <img
@@ -172,8 +173,8 @@ import { goBack } from "@/composables/goBack";
 import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
-import { IAllergyResponse, IComment } from "@/types/allergies";
 import { allergiesService } from "@/services/allergies";
+import { IAllergyResponse, IComment } from "@/types/allergies";
 
 dayjs.extend(relativeTime);
 
@@ -221,21 +222,26 @@ export default defineComponent({
 
     function addComment() {
       loading.value = true;
-      allergiesService
-        .addComment(comment.value, +paramId)
-        .then(() => {
-          loading.value = false;
-          comment.value = "";
-          notification.success({ message: "Comment added!" });
-          getAllergy();
-        })
-        .catch((err) => {
-          loading.value = false;
-          toastError(err);
-        });
+      if (comment.value) {
+        allergiesService
+          .addComment(comment.value, +paramId)
+          .then(() => {
+            loading.value = false;
+            comment.value = "";
+            notification.success({ message: "Comment added!" });
+            getAllergy();
+          })
+          .catch((err) => {
+            loading.value = false;
+            toastError(err);
+          });
+      } else {
+        loading.value = false;
+        notification.warning({ message: "please add a valid comment!" });
+      }
     }
 
-    function deleteComment(commentData: Partial<IComment>) {
+    function deleteComment(commentData: Omit<IComment, "addedBy">) {
       const { comment, createdAt } = commentData;
       loading.value = true;
       if (comment && createdAt) {
@@ -250,6 +256,9 @@ export default defineComponent({
             loading.value = false;
             toastError(err);
           });
+      } else {
+        loading.value = false;
+        notification.error({ message: "something went wrong." });
       }
     }
 

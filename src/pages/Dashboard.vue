@@ -78,14 +78,15 @@
     <a-empty v-else class="mt-90" />
   </div>
   <div class="mt-30 center">
+    <a-spin v-if="isLoading" />
+
     <a-pagination
-      v-if="total"
+      v-else
       show-size-changer
       v-model:current="page"
       v-model:pageSize="pageSize"
       :total="total"
     />
-    <a-spin v-else />
   </div>
 </template>
 
