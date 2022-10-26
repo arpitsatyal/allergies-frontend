@@ -1,29 +1,25 @@
 <template>
   <Header />
-  <div class="mb-10">
-    <a-button type="primary" class="ml-20" @click="goBack">Go Back</a-button>
-    <h1 class="heading pt-7 inline-block center" style="margin-left: 38vw">
-      {{ allergy.name }}
-    </h1>
-  </div>
-  <div v-if="allergy.name" class="relative">
-    <section class="profile">
-      <header class="header">
-        <div class="center">
-          <a-progress type="circle" :percent="mapSeverity[allergy.severity]" />
-          <h2 class="heading">Severity: {{ allergy.severity }}</h2>
-        </div>
-      </header>
+  <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
+  <h1 class="text-center">
+    {{ allergy.name }}
+  </h1>
+  <div v-if="allergy.name">
+    <section
+      class="bg-green-300 h-60 mt-4 flex flex-col space-y-5 justify-center items-center"
+    >
+      <a-progress type="circle" :percent="mapSeverity[allergy.severity]" />
+      <h2 class="heading">Severity: {{ allergy.severity }}</h2>
     </section>
 
-    <div class="main">
-      <div class="symptomsDiv">
-        <div>
+    <main class="flex flex-col md:flex-row mt-4">
+      <div id="img-symp" class="px-4 w-screen md:w-1/4 md:flex-shrink-0">
+        <div id="img">
           <img
             v-if="allergy.image"
             :src="allergy.image"
             :alt="allergy.name"
-            class="profile-pic pointer"
+            class="w-full h-60 object-cover"
             @click="showModal"
           />
           <img
@@ -31,131 +27,121 @@
             src="@/assets/images/default.jpg"
             :alt="allergy.name"
             @click="showModal"
-            class="profile-pic pointer"
+            class="h-60 object-cover"
           />
-
           <a-modal
             v-model:visible="visible"
             width="100%"
             wrap-class-name="full-modal"
             :title="allergy.name"
-            class="center"
+            class=""
             cancelText="Close"
             @ok="handleOk"
           >
             <img
               :src="allergy.image"
               :alt="allergy.name"
-              class="zoom-pic"
+              class=""
               v-if="allergy.image"
             />
             <img
               src="@/assets/images/default.jpg"
               :alt="allergy.name"
-              class="zoom-pic"
+              class=""
               v-else
             />
           </a-modal>
-
-          <h3 :style="{ margin: '15px' }">Symptoms</h3>
         </div>
-        <div v-if="allergy.symptoms.length" class="mt-20">
-          <a-list size="large" bordered :data-source="allergy.symptoms">
-            <template #renderItem="{ item }">
-              <a-list-item>{{ item }}</a-list-item>
-            </template>
-          </a-list>
+        <div id="symp" class="mt-4">
+          <h3 class="font-bold text-center my-5">Symptoms</h3>
+          <div v-if="allergy.symptoms.length">
+            <a-list size="large" bordered :data-source="allergy.symptoms">
+              <template #renderItem="{ item }">
+                <a-list-item>{{ item }}</a-list-item>
+              </template>
+            </a-list>
+          </div>
+          <p class="" v-else>
+            no symptoms have been added for this allergy yet.
+          </p>
         </div>
-        <p class="center mt-30 ml-10 no-allergies" v-else>
-          no symptoms have been added for this allergy yet.
-        </p>
       </div>
 
-      <div class="commentsDiv">
-        <h3 class="center mx-30 mr-120">Comments</h3>
-        <p class="center mr-120" v-if="!allergy.comments.length">
+      <div id="comments" class="md:flex-grow p-8">
+        <h3 class="font-bold">Comments</h3>
+
+        <div v-if="allergy.comments.length">
+          <a-comment v-for="comment in allergy.comments" :key="comment">
+            <template #avatar>
+              <a-avatar
+                src="https://joeschmoe.io/api/v1/random"
+                :alt="comment.addedBy.name"
+              />
+            </template>
+            <template #author
+              ><p class="font-bold text-sm">
+                {{ comment.addedBy.name }}
+              </p>
+            </template>
+            <template #content>
+              <div class="flex justify-between">
+                <p
+                  class="text-justify"
+                  v-if="comment.comment.length > 500 && !seeMore"
+                >
+                  {{ comment.comment.substring(0, 500) }}
+                  <span @click="handleSee" class="text-pink-900 cursor-pointer"
+                    >see more</span
+                  >
+                </p>
+
+                <p class="" v-else-if="comment.comment.length > 500 && seeMore">
+                  {{ comment.comment.substring(0, comment.comment.length) }}
+
+                  <span @click="handleSee" class="text-pink-900 cursor-pointer"
+                    >see less</span
+                  >
+                </p>
+
+                <p class="" v-else>
+                  {{ comment.comment }}
+                </p>
+
+                <DeleteOutlined
+                  v-if="currentUser === comment.addedBy.id"
+                  @click="deleteComment(comment)"
+                />
+              </div>
+            </template>
+            <template #datetime>
+              <a-tooltip>
+                <span class="text-sm text-blue-500">{{
+                  dayjs(comment.createdAt).fromNow()
+                }}</span>
+              </a-tooltip>
+            </template>
+          </a-comment>
+        </div>
+        <p class="py-3" v-else>
           You can add comments regarding the allergy here.
         </p>
-        <div class="absolute comments">
-          <div v-if="allergy.comments.length">
-            <a-comment v-for="comment in allergy.comments" :key="comment">
-              <template #author
-                ><p class="fw-16 black">{{ comment.addedBy.name }}</p></template
-              >
-              <template #avatar>
-                <a-avatar
-                  src="https://joeschmoe.io/api/v1/random"
-                  :alt="comment.addedBy.name"
-                />
-              </template>
-              <template #content>
-                <div class="commentFlex">
-                  <p
-                    class="fw-14 overflow-auto text-justify"
-                    v-if="comment.comment.length > 500 && !seeMore"
-                  >
-                    {{ comment.comment.substring(0, 500) }}
-                    <span class="handleSee" @click="handleSee">see more</span>
-                  </p>
-
-                  <p
-                    class="fw-14 overflow-auto text-justify"
-                    v-else-if="comment.comment.length > 500 && seeMore"
-                  >
-                    {{ comment.comment.substring(0, comment.comment.length) }}
-
-                    <span class="handleSee" @click="handleSee">see less</span>
-                  </p>
-
-                  <p class="fw-14 overflow-auto text-justify" v-else>
-                    {{ comment.comment }}
-                  </p>
-
-                  <DeleteOutlined
-                    v-if="currentUser === comment.addedBy.id"
-                    @click="deleteComment(comment)"
-                    class="ml-20"
-                  />
-                </div>
-              </template>
-
-              <template #datetime>
-                <a-tooltip>
-                  <span style="color: #4ecdc4" class="fw-14">{{
-                    dayjs(comment.createdAt).fromNow()
-                  }}</span>
-                </a-tooltip>
-              </template>
-            </a-comment>
-          </div>
-
-          <a-form-item name="comment" class="mt-20 relative">
+        <div>
+          <a-form-item name="comment">
             <a-textarea
               v-model:value="comment"
-              style="width: 100%"
               placeholder="add your comment"
               allow-clear
             />
-            <a-button
-              type="primary"
-              class="ml-10 absolute"
-              style="top: 20px"
-              v-if="loading"
-              loading
-              >Loading</a-button
-            >
-            <a-button
-              type="primary"
-              v-else
-              class="ml-10 absolute"
-              style="top: 20px"
-              @click="addComment"
-              >Add</a-button
-            >
+            <div class="mt-5">
+              <a-button type="primary" class="" v-if="loading" loading
+                >Loading</a-button
+              >
+              <a-button type="primary" v-else @click="addComment">Add</a-button>
+            </div>
           </a-form-item>
         </div>
       </div>
-    </div>
+    </main>
   </div>
   <Loading v-else />
 </template>
@@ -291,45 +277,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-@import "../assets/global.scss";
-@import "../assets/profile.scss";
-.comments {
-  margin: 0;
-  width: 60%;
-  left: 25%;
-  transform: translateY(-2%);
-}
-.commentFlex {
-  display: flex;
-  justify-content: space-between;
-}
-.main {
-  display: flex;
-  box-sizing: border-box;
-
-  .commentsDiv {
-    width: 80%;
-    margin-top: 10px;
-  }
-  .symptomsDiv {
-    width: 20%;
-    margin-top: 20px;
-    margin-left: 20px;
-  }
-}
-.handleSee {
-  color: #c67d8a;
-  font-weight: bold;
-  cursor: pointer;
-}
-@media (max-width: 950px) {
-  .profile-pic {
-    display: none;
-  }
-  .no-allergies {
-    overflow: auto;
-  }
-}
-</style>

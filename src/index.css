@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+   .border-custom {
+    @apply border border-solid border-red-900
+   }
+  }

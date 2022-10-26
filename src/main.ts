@@ -1,3 +1,4 @@
+import './index.css'
 import "ant-design-vue/dist/antd.css";
 import "vue-toastification/dist/index.css";
 
@@ -11,4 +12,9 @@ import router from "./router/index";
 
 const app = createApp(App);
 
-app.use(router).use(store).use(Antd).use(Toast).mount("#app");
+app
+.use(router)
+.use(store)
+.use(Antd)
+.use(Toast)
+.mount("#app");

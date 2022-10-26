@@ -1,7 +1,7 @@
 <template>
   <Header />
   <a-button type="primary" style="margin-left: 50px" @click="goBack">Go Back</a-button>
-  <h2 class="center">
+  <h2 class="text-center mb-5 font-bold">
     {{ paramId ? "Edit Allergy" : "Add a New Allergy" }}
   </h2>
   <section class="mt-30">

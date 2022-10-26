@@ -1,17 +1,16 @@
 <!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <Header />
-  <div class="my-20">
-    <a-button type="primary" shape="round" :size="size">
+   <a-button type="primary" shape="round" :size="size" class="ml-4">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
-    <h2 class="center" v-if="currentUser">
+  <div class="text-center">
+    <h2 class="pb-2 font-bold" v-if="currentUser">
       Welcome,
       <span v-if="isAdmin">admin ;)</span>
       {{ currentUser }}
     </h2>
-  </div>
-  <div class="mt-30 center">
+      <div class="">
     <a-form-item name="searchTerm">
       <a-input
         v-model:value="searchTerm"
@@ -21,27 +20,28 @@
       />
     </a-form-item>
   </div>
+  </div>
 
-  <section class="mt-30 card" v-if="searchedAllergies.length">
+  <section class="flex justify-center flex-wrap items-center gap-3" v-if="searchedAllergies.length">
     <a-card
       hoverable
-      style="width: 300px"
+      class="w-80"
       :key="allergy.id"
       v-for="allergy in searchedAllergies"
     >
       <template #cover>
         <img
           alt="example"
+          class="h-60 object-cover"
           :src="allergy.image"
           v-if="allergy.image"
-          height="200"
           @click="router.push(`/profile/${allergy.id}`)"
         />
         <img
           alt="example"
+          class="h-60 object-cover"
           src="@/assets/images/default.jpg"
           v-else
-          height="200"
           @click="router.push(`/profile/${allergy.id}`)"
         />
       </template>
@@ -75,9 +75,9 @@
 
   <div v-else>
     <Loading v-if="isLoading" />
-    <a-empty v-else class="mt-90" />
+    <a-empty v-else class="" />
   </div>
-  <div class="mt-30 center">
+  <div class="text-center mt-7">
     <a-pagination
       show-size-changer
       v-model:current="page"
@@ -213,6 +213,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
-@import "../assets/global.scss";
-</style>

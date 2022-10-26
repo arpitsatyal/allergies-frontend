@@ -84,5 +84,4 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "../assets/global.scss";
-@import "../assets/profile.scss";
 </style>
