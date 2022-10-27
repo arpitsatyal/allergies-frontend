@@ -1,84 +1,105 @@
 <template>
   <Header />
-  <a-button type="primary" style="margin-left: 50px" @click="goBack">Go Back</a-button>
-  <h2 class="text-center mb-5 font-bold">
+  <a-button type="primary" class="ml-5" @click="goBack">Go Back</a-button>
+  <h2 class="font-bold text-center pt-5">
     {{ paramId ? "Edit Allergy" : "Add a New Allergy" }}
   </h2>
-  <section class="mt-30">
+  <section class="mt-10 w-screen overflow-hidden">
     <a-form
-      class="allergyForm"
+      class=""
       :model="formState"
       name="validate_other"
       v-bind="formItemLayout"
       @finish="onFinish"
     >
-      <a-form-item
-        label="Name"
-        name="name"
-        :rules="[
-          !paramId && {
-            required: true,
-            message: 'Please input the name!',
-          },
-        ]"
-      >
-        <a-input
-          v-model:value="formState.name"
-          placeholder="Please add a name"
-          :defaultValue="currentAllergy && currentAllergy.name"
-        />
-      </a-form-item>
+      <div class="flex flex-col justify-center items-center">
+        <div class="w-10/12 md:w-1/2">
+          <a-form-item
+            label="Name"
+            name="name"
+            :rules="[
+              !paramId && {
+                required: true,
+                message: 'Please input the name!',
+              },
+            ]"
+          >
+            <a-input
+              v-model:value="formState.name"
+              placeholder="Please add a name"
+              :defaultValue="currentAllergy && currentAllergy.name"
+            />
+          </a-form-item>
+        </div>
 
-      <a-form-item
-        name="severity"
-        label="Severity"
-        has-feedback
-        :rules="[!paramId && { required: true, message: 'Please select a severity!' }]"
-      >
-        <a-select
-          v-model:value="formState.severity"
-          placeholder="Please select a severity"
-          :defaultValue="currentAllergy && currentAllergy.severity"
-        >
-          <a-select-option value="Low">Low</a-select-option>
-          <a-select-option value="Medium">Medium</a-select-option>
-          <a-select-option value="High">High</a-select-option>
-        </a-select>
-      </a-form-item>
+        <div class="w-10/12 md:w-1/2">
+          <a-form-item
+            name="severity"
+            label="Severity"
+            has-feedback
+            :rules="[
+              !paramId && {
+                required: true,
+                message: 'Please select a severity!',
+              },
+            ]"
+          >
+            <a-select
+              v-model:value="formState.severity"
+              placeholder="Please select a severity"
+              :defaultValue="currentAllergy && currentAllergy.severity"
+            >
+              <a-select-option value="Low">Low</a-select-option>
+              <a-select-option value="Medium">Medium</a-select-option>
+              <a-select-option value="High">High</a-select-option>
+            </a-select>
+          </a-form-item>
+        </div>
 
-      <a-form-item name="symptoms" label="Symptoms">
-        <a-select
-          v-model:value="formState['symptoms']"
-          mode="multiple"
-          placeholder="Please select symptoms"
-          :defaultValue="currentAllergy && currentAllergy.symptoms"
-        >
-          <template :key="symptomp" v-for="symptomp in symptomsList">
-            <a-select-option :value="symptomp">{{ symptomp }}</a-select-option>
-          </template>
-        </a-select>
-      </a-form-item>
+        <div class="w-10/12 md:w-1/2">
+          <a-form-item name="symptoms" label="Symptoms">
+            <a-select
+              v-model:value="formState['symptoms']"
+              mode="multiple"
+              placeholder="Please select symptoms"
+              :defaultValue="currentAllergy && currentAllergy.symptoms"
+            >
+              <template :key="symptomp" v-for="symptomp in symptomsList">
+                <a-select-option :value="symptomp">{{
+                  symptomp
+                }}</a-select-option>
+              </template>
+            </a-select>
+          </a-form-item>
+        </div>
 
-      <a-form-item name="image" label="Image">
-        <a-upload
-          :action="imageUrl"
-          :headers="headers"
-          v-model:fileList="formState.image"
-          @change="handleChange"
-          name="image"
-          list-type="picture"
-        >
-          <a-button>
-            <template #icon><UploadOutlined /></template>
-            Click to upload
-          </a-button>
-        </a-upload>
-      </a-form-item>
+        <div class="w-10/12 md:w-1/2">
+          <a-form-item name="image" label="Image">
+            <a-upload
+              :action="imageUrl"
+              :headers="headers"
+              v-model:fileList="formState.image"
+              @change="handleChange"
+              name="image"
+              list-type="picture"
+            >
+              <a-button>
+                <template #icon><UploadOutlined /></template>
+                Click to upload
+              </a-button>
+            </a-upload>
+          </a-form-item>
+        </div>
 
-      <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-        <a-button type="primary" v-if="loading" loading>Loading</a-button>
-        <a-button type="primary" v-else html-type="submit">Submit</a-button>
-      </a-form-item>
+        <div class="w-10/12 md:w-1/4 md:ml-16">
+          <a-button class="w-full" type="primary" v-if="loading" loading
+            >Loading</a-button
+          >
+          <a-button class="w-full" type="primary" v-else html-type="submit"
+            >Submit</a-button
+          >
+        </div>
+      </div>
     </a-form>
   </section>
 </template>
@@ -116,11 +137,19 @@ export default defineComponent({
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
     };
-    const symptomsList = ["Fever", "Vomit", "Nausea", "Headache", "Stomach Pain"];
+    const symptomsList = [
+      "Fever",
+      "Vomit",
+      "Nausea",
+      "Headache",
+      "Stomach Pain",
+    ];
 
     const store = useStore();
 
-    const imageUrl = ref<string>(process.env.VUE_APP_API_URL + "/allergies/upload-image");
+    const imageUrl = ref<string>(
+      process.env.VUE_APP_API_URL + "/allergies/upload-image"
+    );
     const headers = ref({
       Authorization: `Bearer ${getFromStore("token")}`,
     });
@@ -165,13 +194,15 @@ export default defineComponent({
     };
 
     const matchedAllergy = computed(() => {
-      return store.state.allergies.allAllergies.filter((allergy: IAllergyResponse) => {
-        if (props.paramId) {
-          if (allergy.id === +props.paramId) {
-            return allergy;
+      return store.state.allergies.allAllergies.filter(
+        (allergy: IAllergyResponse) => {
+          if (props.paramId) {
+            if (allergy.id === +props.paramId) {
+              return allergy;
+            }
           }
         }
-      });
+      );
     });
 
     watch(
@@ -204,7 +235,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-@import "../assets/global.scss";
-</style>

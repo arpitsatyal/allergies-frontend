@@ -4,22 +4,21 @@
    <a-button type="primary" shape="round" :size="size" class="ml-4">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
-  <div class="text-center">
-    <h2 class="pb-2 font-bold" v-if="currentUser">
+  <div class="flex flex-col mb-3 justify-center items-center w-screen">
+    <h2 class="py-4 font-bold" v-if="currentUser">
       Welcome,
       <span v-if="isAdmin">admin ;)</span>
       {{ currentUser }}
     </h2>
-      <div class="">
-    <a-form-item name="searchTerm">
-      <a-input
+   <div class="w-1/2 md:w-1/4">
+     <a-form-item name="searchTerm">
+       <a-input
         v-model:value="searchTerm"
         placeholder="Search..."
         :size="size"
-        style="width: 20%; border: 1px solid black"
       />
     </a-form-item>
-  </div>
+   </div>
   </div>
 
   <section class="flex justify-center flex-wrap items-center gap-3" v-if="searchedAllergies.length">
