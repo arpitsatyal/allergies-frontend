@@ -1,41 +1,118 @@
 <template>
-  <div class="info">
-    <h2>Welcome to Allergies Manegement</h2>
-    <p>Please login or sign up to continue.</p>
-  </div>
-  <div class="container">
-    <div class="form">
-      <form @submit="onSubmit" class="login-form">
-        <input
-          v-if="!isLogin"
-          v-model="name"
-          type="text"
-          name="name"
-          placeholder="Name"
-        />
-        <input v-model="email" type="text" name="email" placeholder="Email" />
-        <input
-          v-model="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-        />
-        <template v-if="isLogin">
-          <button type="submit" class="btn" v-if="!loading">Login</button>
-
-          <button type="submit" class="btn" disabled v-else>Logging in...</button>
-          <p class="message">
-            Not registered yet? <router-link to="/signup">Sign Up</router-link>
-          </p>
-        </template>
-        <template v-else>
-          <button type="submit" class="btn" v-if="!loading">Sign up</button>
-          <button type="submit" class="btn" disabled v-else>Signing up....</button>
-          <p class="message">Go Back to <router-link to="/">Login</router-link></p>
-        </template>
-      </form>
+  <section>
+    <div
+      id="title"
+      class="py-12 bg-indigo-100 flex justify-center lg:justify-start lg:px-12"
+    >
+      <div class="cursor-pointer flex items-center">
+        <div
+          class="text-xl md:text-2xl text-indigo-800 tracking-wide ml-2 font-semibold"
+        >
+          Allergies Manegement Application
+        </div>
+      </div>
     </div>
-  </div>
+     <div
+      id="form"
+      class="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl"
+    >
+      <h2
+        class="text-center text-2xl text-indigo-900 font-display font-semibold lg:text-left xl:text-4xl xl:text-bold mb-5"
+      >
+        {{ isLogin ? "Login" : "Sign up" }}
+      </h2>
+      <div>
+        <form>
+          <div v-if="!isLogin" class="mb-5">
+            <div class="text-sm font-bold text-gray-700 tracking-wide mb-4">
+              Name
+            </div>
+            <input
+              v-model="name"
+              name="name"
+              type="text"
+              class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+              placeholder="Arpit"
+            />
+          </div>
+          <div class="mb-5">
+            <div class="text-sm font-bold text-gray-700 tracking-wide mb-4">
+              Email Address
+            </div>
+            <input
+              v-model="email"
+              name="email"
+              type="text"
+              class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+              placeholder="arpit@gmail.com"
+            />
+          </div>
+          <div class="mb-5">
+            <div class="flex justify-between items-center">
+              <div class="text-sm font-bold text-gray-700 tracking-wide mb-4">
+                Password
+              </div>
+            </div>
+            <input
+              v-model="password"
+              type="password"
+              name="password"
+              class="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+              placeholder="Enter your password"
+            />
+          </div>
+          <div class="mt-10" v-if="isLogin">
+            <button
+              v-if="!loading"
+              @click="onSubmit"
+              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
+            >
+              Log In
+            </button>
+            <button
+              v-else
+              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
+            >
+              Logging in...
+            </button>
+          </div>
+          <div class="mt-10" v-else>
+            <button
+              v-if="!loading"
+              @click="onSubmit"
+              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
+            >
+              Sign Up
+            </button>
+            <button
+              v-else
+              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
+            >
+              Signing up...
+            </button>
+          </div>
+        </form>
+        <div
+          v-if="isLogin"
+          class="mt-12 text-sm font-display font-semibold text-gray-700 text-center"
+        >
+          Don't have an account?
+          <span class="cursor-pointer text-indigo-600 hover:text-indigo-800">
+            <router-link to="/signup">Sign Up</router-link>
+          </span>
+        </div>
+        <div
+          v-else
+          class="mt-12 text-sm font-display font-semibold text-gray-700 text-center"
+        >
+          Already have an account ?
+          <span class="cursor-pointer text-indigo-600 hover:text-indigo-800">
+            <router-link to="/">Login</router-link>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -71,19 +148,21 @@ export default defineComponent({
             password: password.value,
           })
           .then((response) => {
-            loading.value = false;
             toast.success(response.message);
 
             store.commit("auth/addUserToState", response.data.user);
             store.commit("auth/addTokenToState", response.data.accessToken);
-            store.commit("auth/addRefreshTokenToState", response.data.refreshToken);
+            store.commit(
+              "auth/addRefreshTokenToState",
+              response.data.refreshToken
+            );
 
             setTimeout(() => router.push("/dashboard"), 1000);
           })
           .catch((err) => {
-            loading.value = false;
             toastError(err);
-          });
+          })
+          .finally(() => (loading.value = false));
       } else {
         authService
           .signup({
@@ -92,14 +171,13 @@ export default defineComponent({
             password: password.value,
           })
           .then((response) => {
-            loading.value = false;
             toast.success(response.message);
             setTimeout(() => router.push("/"), 1000);
           })
           .catch((err) => {
-            loading.value = false;
             toastError(err);
-          });
+          })
+          .finally(() => (loading.value = false));
       }
     }
 
@@ -108,7 +186,3 @@ export default defineComponent({
   inheritAttrs: false, // disable 'non-props' warning
 });
 </script>
-
-<style scoped lang="scss">
-@import "../assets/login.scss";
-</style>

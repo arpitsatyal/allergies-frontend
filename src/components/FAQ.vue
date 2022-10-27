@@ -1,6 +1,11 @@
 <template>
   <main>
-    <a @click="showDrawer" class="text-white">FAQ</a>
+    <div class="flex gap-2">
+      <QuestionOutlined />
+      <button @click="showDrawer" class="hover:text-blue-400">
+        FAQ
+      </button>
+    </div>
     <a-drawer
       v-model:visible="visible"
       class="custom-class"
@@ -53,9 +58,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "@vue/runtime-core";
+import { QuestionOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
   name: "FAQ",
+  components: {
+    QuestionOutlined,
+  },
   setup() {
     const visible = ref(false);
     const showDrawer = () => (visible.value = true);
