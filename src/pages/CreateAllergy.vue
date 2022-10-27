@@ -170,26 +170,24 @@ export default defineComponent({
         allergiesService
           .updateAllergy({ ...values, image: iData }, +props.paramId)
           .then(() => {
-            loading.value = false;
             toast.success("Allergy updated successfully...");
             setTimeout(() => router.push("/dashboard"), 1000);
           })
           .catch((err) => {
-            loading.value = false;
             toastError(err);
-          });
+          })
+          .finally(() => loading.value = false);
       } else {
         allergiesService
           .addAllergy({ ...values, image: iData })
           .then(() => {
-            loading.value = false;
             toast.success("Allergy created successfully...");
             setTimeout(() => router.push("/dashboard"), 1000);
           })
           .catch((err) => {
-            loading.value = false;
             toastError(err);
-          });
+          })
+          .finally(() => loading.value = false);
       }
     };
 

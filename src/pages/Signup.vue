@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-     <div
+    <div
       id="form"
       class="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl"
     >
@@ -62,54 +62,32 @@
             />
           </div>
           <div class="mt-10" v-if="isLogin">
-            <button
+            <Button
               v-if="!loading"
-              @click="onSubmit"
-              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
-            >
-              Log In
-            </button>
-            <button
+              :onSubmit="onSubmit"
+              text="Login"
+            />
+            <Button
               v-else
-              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
-            >
-              Logging in...
-            </button>
+              :onSubmit="onSubmit"
+              text="Logging in..."
+            />
           </div>
           <div class="mt-10" v-else>
-            <button
+            <Button
               v-if="!loading"
-              @click="onSubmit"
-              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
-            >
-              Sign Up
-            </button>
-            <button
+              :onSubmit="onSubmit"
+              text="Sign Up"
+            />
+            <Button
               v-else
-              class="bg-indigo-500 text-gray-100 p-4 w-full rounded-full tracking-wide font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-indigo-600 shadow-lg"
-            >
-              Signing up...
-            </button>
+              :onSubmit="onSubmit"
+              text="Signing up..."
+            />
           </div>
         </form>
-        <div
-          v-if="isLogin"
-          class="mt-12 text-sm font-display font-semibold text-gray-700 text-center"
-        >
-          Don't have an account?
-          <span class="cursor-pointer text-indigo-600 hover:text-indigo-800">
-            <router-link to="/signup">Sign Up</router-link>
-          </span>
-        </div>
-        <div
-          v-else
-          class="mt-12 text-sm font-display font-semibold text-gray-700 text-center"
-        >
-          Already have an account ?
-          <span class="cursor-pointer text-indigo-600 hover:text-indigo-800">
-            <router-link to="/">Login</router-link>
-          </span>
-        </div>
+        <Extra v-if="isLogin" textOne="Dont have an account?" textTwo="Sign Up" path="/signup" />
+        <Extra v-else textOne="Already have an account?" textTwo="Login" path="/" />
       </div>
     </div>
   </section>
@@ -123,11 +101,17 @@ import router from "@/router";
 import { authService } from "../services/auth";
 import { ToastService } from "../services/toast";
 import { toastError } from "../utils/toastError";
+import Button from "../components/Button.vue";
+import Extra from "@/components/Extra.vue";
 
 export default defineComponent({
   name: "Signup",
   props: {
     isLogin: Boolean,
+  },
+  components: {
+    Button,
+    Extra
   },
   setup(props) {
     const name = ref<string>("");
