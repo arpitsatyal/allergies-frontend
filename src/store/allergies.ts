@@ -37,26 +37,24 @@ export const allergies = {
         .getAllergies(+paginationData.page, +paginationData.pageSize)
         .then((data) => {
           commit("addAllergiesToState", data);
-          commit("setLoading", false);
         })
         .catch((err) => {
-          commit("setLoading", false);
           toastError(err);
           logout();
-        });
+        })
+        .finally(() => commit("setLoading", false));
     },
     searchAllergies({ commit }: any, searchTerm: string) {
       commit("setLoading", true);
       allergiesService
         .searchAllergies(searchTerm)
         .then((data) => {
-          commit("setLoading", false);
           commit("addAllergiesToState", data);
         })
         .catch((err) => {
           toastError(err);
-          commit("setLoading", false);
-        });
+        })
+        .finally(() => commit("setLoading", false));
     },
   },
 };

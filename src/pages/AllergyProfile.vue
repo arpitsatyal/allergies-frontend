@@ -1,6 +1,6 @@
 <template>
   <Header />
-   <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
+  <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
   <h1 class="font-bold text-center mb-5">
     {{ allergy.name }}
   </h1>
@@ -129,7 +129,7 @@
         <div class="flex">
           <a-form-item name="comment" class="flex-1">
             <a-textarea
-            class=""
+              class=""
               v-model:value="comment"
               placeholder="add your comment"
               allow-clear
@@ -214,15 +214,14 @@ export default defineComponent({
         allergiesService
           .addComment(comment.value, +paramId)
           .then(() => {
-            loading.value = false;
             comment.value = "";
             notification.success({ message: "Comment added!" });
             getAllergy();
           })
           .catch((err) => {
-            loading.value = false;
             toastError(err);
-          });
+          })
+          .finally(() => (loading.value = false));
       } else {
         loading.value = false;
         notification.warning({ message: "please add a valid comment!" });
@@ -232,22 +231,14 @@ export default defineComponent({
     function deleteComment(commentData: Omit<IComment, "addedBy">) {
       const { comment, createdAt } = commentData;
       loading.value = true;
-      if (comment && createdAt) {
-        allergiesService
-          .deleteComment({ comment, createdAt }, +paramId)
-          .then(() => {
-            loading.value = false;
-            notification.error({ message: "Comment deleted!" });
-            getAllergy();
-          })
-          .catch((err) => {
-            loading.value = false;
-            toastError(err);
-          });
-      } else {
-        loading.value = false;
-        notification.error({ message: "something went wrong." });
-      }
+      allergiesService
+        .deleteComment({ comment, createdAt }, +paramId)
+        .then(() => {
+          notification.error({ message: "Comment deleted!" });
+          getAllergy();
+        })
+        .catch((err) => toastError(err))
+        .finally(() => (loading.value = false));
     }
 
     const handleSee = () => (seeMore.value = !seeMore.value);

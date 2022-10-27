@@ -21,12 +21,12 @@
    </div>
   </div>
 
-  <section class="flex justify-center flex-wrap items-center gap-3" v-if="searchedAllergies.length">
+  <section class="flex justify-center flex-wrap items-center gap-3" v-if="allergies.length">
     <a-card
       hoverable
       class="w-80"
       :key="allergy.id"
-      v-for="allergy in searchedAllergies"
+      v-for="allergy in allergies"
     >
       <template #cover>
         <img
@@ -165,14 +165,6 @@ export default defineComponent({
       findTotal();
     });
 
-    const searchedAllergies = computed(() => {
-      return allergies.value.filter((allergy: IAllergyResponse) => {
-        if (allergy.name.includes(searchTerm.value.toLowerCase())) {
-          return allergy;
-        }
-      });
-    });
-
     function findTotal() {
       allergiesService
         .getAllergies(1, 100)
@@ -195,7 +187,7 @@ export default defineComponent({
     return {
       toast,
       isLoading,
-      searchedAllergies,
+      allergies,
       size,
       searchTerm,
       page,
