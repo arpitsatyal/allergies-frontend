@@ -1,18 +1,18 @@
 <template>
   <Header />
-  <a-button type="primary" class="mt-30 ml-20" @click="goBack">Go Back</a-button>
-  <div class="mt-30" v-if="!loading">
-    <h3 class="center mb-20">All users</h3>
+  <a-button type="primary" class="ml-4" @click="goBack">Go Back</a-button>
+  <div class="" v-if="!loading">
+    <h3 class="text-center font-bold mb-5">All users</h3>
     <a-table :dataSource="users" :columns="columns" :pagination="false">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">
-          <span :class="{ active: record.role === 'admin' }">{{ record.name }}</span>
+          <span :class="{ 'font-bold text-green-600': record.role === 'admin' }">{{ record.name }}</span>
         </template>
         <template v-if="column.key === 'email'">
-          <span :class="{ active: record.role === 'admin' }">{{ record.email }}</span>
+          <span :class="{ 'font-bold text-green-600': record.role === 'admin' }">{{ record.email }}</span>
         </template>
         <template v-if="column.key === 'role'">
-          <span :class="{ active: record.role === 'admin' }">{{ record.role }}</span>
+          <span :class="{ 'font-bold text-green-600': record.role === 'admin' }">{{ record.role }}</span>
         </template>
       </template>
     </a-table>
@@ -81,7 +81,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-@import "../assets/global.scss";
-</style>

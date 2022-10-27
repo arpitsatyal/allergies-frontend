@@ -1,7 +1,7 @@
 <template>
   <Header />
-  <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
-  <h1 class="text-center">
+   <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
+  <h1 class="font-bold text-center mb-5">
     {{ allergy.name }}
   </h1>
   <div v-if="allergy.name">
@@ -19,7 +19,7 @@
             v-if="allergy.image"
             :src="allergy.image"
             :alt="allergy.name"
-            class="w-full h-60 object-cover"
+            class="w-full h-60 object-cover cursor-pointer"
             @click="showModal"
           />
           <img
@@ -27,27 +27,26 @@
             src="@/assets/images/default.jpg"
             :alt="allergy.name"
             @click="showModal"
-            class="h-60 object-cover"
+            class="w-full h-60 object-cover cursor-pointer"
           />
           <a-modal
             v-model:visible="visible"
             width="100%"
             wrap-class-name="full-modal"
             :title="allergy.name"
-            class=""
             cancelText="Close"
             @ok="handleOk"
           >
             <img
               :src="allergy.image"
               :alt="allergy.name"
-              class=""
+              class="w-full"
               v-if="allergy.image"
             />
             <img
               src="@/assets/images/default.jpg"
               :alt="allergy.name"
-              class=""
+              class="w-full"
               v-else
             />
           </a-modal>
@@ -67,8 +66,8 @@
         </div>
       </div>
 
-      <div id="comments" class="md:flex-grow p-8">
-        <h3 class="font-bold">Comments</h3>
+      <div id="comments" class="md:flex-grow p-6">
+        <h3 class="font-bold text-center md:text-left">Comments</h3>
 
         <div v-if="allergy.comments.length">
           <a-comment v-for="comment in allergy.comments" :key="comment">
@@ -84,13 +83,13 @@
               </p>
             </template>
             <template #content>
-              <div class="flex justify-between">
+              <div class="flex justify-between py-2">
                 <p
-                  class="text-justify"
+                  class="text-justify w-11/12"
                   v-if="comment.comment.length > 500 && !seeMore"
                 >
                   {{ comment.comment.substring(0, 500) }}
-                  <span @click="handleSee" class="text-pink-900 cursor-pointer"
+                  <span @click="handleSee" class="text-pink-500 cursor-pointer"
                     >see more</span
                   >
                 </p>
@@ -98,7 +97,7 @@
                 <p class="" v-else-if="comment.comment.length > 500 && seeMore">
                   {{ comment.comment.substring(0, comment.comment.length) }}
 
-                  <span @click="handleSee" class="text-pink-900 cursor-pointer"
+                  <span @click="handleSee" class="text-pink-500 cursor-pointer"
                     >see less</span
                   >
                 </p>
@@ -107,10 +106,12 @@
                   {{ comment.comment }}
                 </p>
 
-                <DeleteOutlined
-                  v-if="currentUser === comment.addedBy.id"
-                  @click="deleteComment(comment)"
-                />
+                <div class="mr-0 md:mr-10">
+                  <DeleteOutlined
+                    v-if="currentUser === comment.addedBy.id"
+                    @click="deleteComment(comment)"
+                  />
+                </div>
               </div>
             </template>
             <template #datetime>
@@ -125,20 +126,21 @@
         <p class="py-3" v-else>
           You can add comments regarding the allergy here.
         </p>
-        <div>
-          <a-form-item name="comment">
+        <div class="flex">
+          <a-form-item name="comment" class="flex-1">
             <a-textarea
+            class=""
               v-model:value="comment"
               placeholder="add your comment"
               allow-clear
             />
-            <div class="mt-5">
-              <a-button type="primary" class="" v-if="loading" loading
-                >Loading</a-button
-              >
-              <a-button type="primary" v-else @click="addComment">Add</a-button>
-            </div>
           </a-form-item>
+          <div class="m-2">
+            <a-button type="primary" class="" v-if="loading" loading
+              >Loading</a-button
+            >
+            <a-button type="primary" v-else @click="addComment">Add</a-button>
+          </div>
         </div>
       </div>
     </main>

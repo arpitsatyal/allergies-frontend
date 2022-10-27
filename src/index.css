@@ -7,3 +7,9 @@
     @apply border border-solid border-red-900
    }
   }
+
+  #components-a-tooltip-demo-color .ant-btn {
+   margin-right: 8px;
+   margin-bottom: 8px;
+ }
+ 

@@ -1,50 +1,69 @@
 <template>
   <main>
-    <div class="faq-card">
-      <h2 class="faq-card__title">FAQ</h2>
-      <ul class="faq-card__list">
-        <li class="faq-card__item">
-          <button class="faq-card__button faq-card__button_active">
-            How do I add a new allergy?<i
-              class="faq-card__icon fa fa-caret-down"
-              aria-hidden="true"
-            ></i>
-          </button>
-          <p class="faq-card__desc">
-            You can add a new allergy by clicking on the "Add Allergy" button in the home
-            page.
-          </p>
-        </li>
-        <li class="faq-card__item">
-          <button class="faq-card__button faq-card__button_active">
-            Can I add multiple allergies?<i
-              class="faq-card__icon fa fa-caret-down"
-              aria-hidden="true"
-            ></i>
-          </button>
-          <p class="faq-card__desc">Yes, you can add more than one allergy.</p>
-        </li>
+    <a @click="showDrawer" class="text-white">FAQ</a>
+    <a-drawer
+      v-model:visible="visible"
+      class="custom-class"
+      style="color: red"
+      placement="right"
+    >
+      <div class="faq-card">
+        <h2 class="faq-card__title">FAQ</h2>
+        <ul class="faq-card__list">
+          <li class="faq-card__item">
+            <button class="faq-card__button faq-card__button_active">
+              How do I add a new allergy?<i
+                class="faq-card__icon fa fa-caret-down"
+                aria-hidden="true"
+              ></i>
+            </button>
+            <p class="faq-card__desc">
+              You can add a new allergy by clicking on the "Add Allergy" button
+              in the home page.
+            </p>
+          </li>
+          <li class="faq-card__item">
+            <button class="faq-card__button faq-card__button_active">
+              Can I add multiple allergies?<i
+                class="faq-card__icon fa fa-caret-down"
+                aria-hidden="true"
+              ></i>
+            </button>
+            <p class="faq-card__desc">
+              Yes, you can add more than one allergy.
+            </p>
+          </li>
 
-        <li class="faq-card__item">
-          <button class="faq-card__button faq-card__button_active">
-            How do I see all the users in the app?<i
-              class="faq-card__icon fa fa-caret-down"
-              aria-hidden="true"
-            ></i>
-          </button>
-          <p class="faq-card__desc">
-            Only admins are able to see all the users in the app.
-          </p>
-        </li>
-      </ul>
-    </div>
+          <li class="faq-card__item">
+            <button class="faq-card__button faq-card__button_active">
+              How do I see all the users in the app?<i
+                class="faq-card__icon fa fa-caret-down"
+                aria-hidden="true"
+              ></i>
+            </button>
+            <p class="faq-card__desc">
+              Only admins are able to see all the users in the app.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </a-drawer>
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "@vue/runtime-core";
+
 export default defineComponent({
   name: "FAQ",
+  setup() {
+    const visible = ref(false);
+    const showDrawer = () => (visible.value = true);
+    return {
+      visible,
+      showDrawer,
+    };
+  },
 });
 </script>
 
@@ -156,7 +175,8 @@ body {
     }
 
     &_active {
-      transition: color 200ms linear, font-weight 100ms linear, margin-bottom 100ms linear;
+      transition: color 200ms linear, font-weight 100ms linear,
+        margin-bottom 100ms linear;
 
       .faq-card__icon {
         transition: 200ms linear;
