@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <Header />
-  <div class="flex justify-center items-center mb-5 md:block md:ml-4 md:mb-0">
+  <div class="hidden md:block md:ml-4">
     <a-button type="primary" :size="size">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>

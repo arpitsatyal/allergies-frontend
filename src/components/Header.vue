@@ -11,12 +11,16 @@
             <template #icon>
               <SettingOutlined />
             </template>
-            <template #title>
-              Menu</template>
+            <template #title> Menu</template>
             <a-menu-item-group title="Actions">
-              <a-menu-item v-if="isAdmin" @click="router.push('/users')"
-                >All Users</a-menu-item
-              >
+              <div class="block md:hidden">
+                <a-menu-item>
+                <router-link to="/add-allergy">Add Allergy</router-link>
+              </a-menu-item>
+              </div>
+              <a-menu-item v-if="isAdmin">
+                <router-link to="/users">All Users</router-link>
+              </a-menu-item>
               <a-menu-item @click="logout">Logout</a-menu-item>
             </a-menu-item-group>
           </a-sub-menu>
@@ -31,7 +35,6 @@ import { defineComponent } from "@vue/runtime-core";
 import { SettingOutlined } from "@ant-design/icons-vue";
 
 import FAQ from "./FAQ.vue";
-import router from "@/router";
 import { logout } from "@/utils/logout";
 import { isUserTheAdmin } from "../composables/isAdmin";
 
@@ -46,7 +49,6 @@ export default defineComponent({
     const isAdmin = isUserTheAdmin();
 
     return {
-      router,
       isAdmin,
       logout,
     };
