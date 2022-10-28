@@ -1,27 +1,33 @@
 <!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <Header />
-   <a-button type="primary" :size="size" class="ml-4">
+  <div class="flex justify-center items-center mb-5 md:block md:ml-4 md:mb-0">
+    <a-button type="primary" :size="size">
       <router-link to="/add-allergy">Add Allergy</router-link>
     </a-button>
+  </div>
+
   <div class="flex flex-col mb-3 justify-center items-center w-screen">
     <h2 class="py-4 font-bold" v-if="currentUser">
       Welcome,
       <span v-if="isAdmin">admin ;)</span>
       {{ currentUser }}
     </h2>
-   <div class="w-1/2 md:w-1/4">
-     <a-form-item name="searchTerm">
-       <a-input
-        v-model:value="searchTerm"
-        placeholder="Search..."
-        :size="size"
-      />
-    </a-form-item>
-   </div>
+    <div class="w-1/2 md:w-1/4">
+      <a-form-item name="searchTerm">
+        <a-input
+          v-model:value="searchTerm"
+          placeholder="Search..."
+          :size="size"
+        />
+      </a-form-item>
+    </div>
   </div>
 
-  <section class="flex justify-center flex-wrap items-center gap-3" v-if="allergies.length">
+  <section
+    class="flex justify-center flex-wrap items-center gap-3"
+    v-if="allergies.length"
+  >
     <a-card
       hoverable
       class="w-80"
@@ -45,7 +51,9 @@
         />
       </template>
       <template class="ant-card-actions" #actions>
-        <router-link :to="{ name: 'UpdateAllergy', params: { id: allergy.id } }">
+        <router-link
+          :to="{ name: 'UpdateAllergy', params: { id: allergy.id } }"
+        >
           <EditOutlined />
         </router-link>
 
@@ -76,7 +84,7 @@
     <Loading v-if="isLoading" />
     <a-empty v-else class="" />
   </div>
-  <div class="text-center mt-7">
+  <div class="text-center my-7">
     <a-pagination
       show-size-changer
       v-model:current="page"
@@ -89,7 +97,13 @@
 <script lang="ts">
 import { useStore } from "vuex";
 import type { SizeType } from "ant-design-vue/es/config-provider";
-import { defineComponent, ref, onMounted, computed, watch } from "@vue/runtime-core";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  computed,
+  watch,
+} from "@vue/runtime-core";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -104,6 +118,7 @@ import Loading from "../components/Loading.vue";
 import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
+import Pagination from '../components/Pagination.vue';
 import { isUserTheAdmin } from "@/composables/isAdmin";
 import { allergiesService } from "@/services/allergies";
 
@@ -154,7 +169,9 @@ export default defineComponent({
         .then(() => {
           isHighRisk
             ? toast.success(`${allergy.name} is now marked as high risk.`)
-            : toast.warning(`${allergy.name} is no longer marked as high risk.`);
+            : toast.warning(
+                `${allergy.name} is no longer marked as high risk.`
+              );
           fetchAllAllergies();
         })
         .catch((err) => toastError(err));
@@ -181,7 +198,9 @@ export default defineComponent({
 
     watch(
       searchTerm,
-      debounce(() => store.dispatch("allergies/searchAllergies", searchTerm.value))
+      debounce(() =>
+        store.dispatch("allergies/searchAllergies", searchTerm.value)
+      )
     );
 
     return {
@@ -203,4 +222,3 @@ export default defineComponent({
   inheritAttrs: false,
 });
 </script>
-

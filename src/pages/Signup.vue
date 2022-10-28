@@ -35,6 +35,7 @@
               placeholder="Arpit"
             />
           </div>
+          <!-- <Input label="Email Address" :vModel="email" name="email" placeholder="arpit@gmail.com" /> -->
           <div class="mb-5">
             <div class="text-sm font-bold text-gray-700 tracking-wide mb-4">
               Email Address
@@ -69,7 +70,6 @@
             />
             <Button
               v-else
-              :onSubmit="onSubmit"
               text="Logging in..."
             />
           </div>
@@ -81,7 +81,6 @@
             />
             <Button
               v-else
-              :onSubmit="onSubmit"
               text="Signing up..."
             />
           </div>
@@ -98,11 +97,11 @@ import { useStore } from "vuex";
 import { defineComponent, ref } from "@vue/runtime-core";
 
 import router from "@/router";
+import Extra from "@/components/Extra.vue";
+import Button from "../components/Button.vue";
 import { authService } from "../services/auth";
 import { ToastService } from "../services/toast";
 import { toastError } from "../utils/toastError";
-import Button from "../components/Button.vue";
-import Extra from "@/components/Extra.vue";
 
 export default defineComponent({
   name: "Signup",

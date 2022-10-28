@@ -53,7 +53,7 @@
         </div>
         <div id="symp" class="mt-4">
           <h3 class="font-bold text-center my-5">Symptoms</h3>
-          <div v-if="allergy.symptoms.length">
+          <div v-if="allergy.symptoms.length" class="mb-0 md:mb-5">
             <a-list size="large" bordered :data-source="allergy.symptoms">
               <template #renderItem="{ item }">
                 <a-list-item>{{ item }}</a-list-item>
@@ -123,7 +123,7 @@
             </template>
           </a-comment>
         </div>
-        <p class="py-3" v-else>
+        <p class="py-3 text-center md:text-left text-sm" v-else>
           You can add comments regarding the allergy here.
         </p>
         <div class="flex">

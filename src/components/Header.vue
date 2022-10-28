@@ -1,6 +1,6 @@
 <template>
   <div class="mb-5 p-4 bg-white flex justify-between items-center">
-    <h1 class="font-bold">Allergies Management</h1>
+    <h1 class="font-bold text-xl">Allergies Management</h1>
     <div class="flex justify-end items-center space-x-5">
       <div id="faq" class="hidden md:block">
         <FAQ />
@@ -12,7 +12,7 @@
               <SettingOutlined />
             </template>
             <template #title>
-              Settings</template>
+              Menu</template>
             <a-menu-item-group title="Actions">
               <a-menu-item v-if="isAdmin" @click="router.push('/users')"
                 >All Users</a-menu-item
