@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <a-button class="ml-4" type="primary" @click="goBack">Go Back</a-button>
+  <GoBack />
   <h1 class="font-bold text-center mb-5">
     {{ allergy.name }}
   </h1>
@@ -13,7 +13,7 @@
     </section>
 
     <main class="flex flex-col md:flex-row mt-4">
-      <div id="img-symp" class="px-4 w-screen md:w-1/4 md:flex-shrink-0">
+      <div id="img-symp" class="px-0 md:px-4 w-screen md:w-1/4 md:flex-shrink-0">
         <div id="img">
           <img
             v-if="allergy.image"
@@ -157,7 +157,7 @@ import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
 import { getFromStore } from "@/utils/store";
-import { goBack } from "@/composables/goBack";
+import GoBack from '../components/Back.vue';
 import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
 import { toastError } from "../utils/toastError";
@@ -168,6 +168,7 @@ dayjs.extend(relativeTime);
 
 export default defineComponent({
   components: {
+    GoBack,
     Header,
     Loading,
     DeleteOutlined,
@@ -260,7 +261,6 @@ export default defineComponent({
       seeMore,
       visible,
       handleSee,
-      goBack,
       getAllergy,
       addComment,
       deleteComment,

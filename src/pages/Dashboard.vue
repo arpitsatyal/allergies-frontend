@@ -7,7 +7,7 @@
     </a-button>
   </div>
 
-  <div class="flex flex-col mb-3 justify-center items-center w-screen">
+  <div class="flex flex-col mb-3 justify-center items-center w-screen space-y-3">
     <h2 class="py-4 font-bold" v-if="currentUser">
       Welcome,
       <span v-if="isAdmin">admin ;)</span>
@@ -25,12 +25,12 @@
   </div>
 
   <section
-    class="flex justify-center flex-wrap items-center gap-3"
+    class="flex justify-center flex-wrap items-center gap-7 md:gap-3"
     v-if="allergies.length"
   >
     <a-card
       hoverable
-      class="w-80"
+      class="w-11/12 md:w-80"
       :key="allergy.id"
       v-for="allergy in allergies"
     >
@@ -118,7 +118,6 @@ import Loading from "../components/Loading.vue";
 import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { IAllergyResponse } from "@/types/allergies";
-import Pagination from '../components/Pagination.vue';
 import { isUserTheAdmin } from "@/composables/isAdmin";
 import { allergiesService } from "@/services/allergies";
 

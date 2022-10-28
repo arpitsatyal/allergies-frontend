@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <a-button type="primary" class="ml-5" @click="goBack">Go Back</a-button>
+    <GoBack />
   <h2 class="font-bold text-center pt-5">
     {{ paramId ? "Edit Allergy" : "Add a New Allergy" }}
   </h2>
@@ -110,9 +110,9 @@ import { defineComponent, reactive, ref, watch, computed } from "vue";
 
 import router from "@/router";
 import { debounce } from "@/utils/debounce";
+import GoBack from '../components/Back.vue';
 import Header from "@/components/Header.vue";
 import { getFromStore } from "../utils/store";
-import { goBack } from "../composables/goBack";
 import { ToastService } from "@/services/toast";
 import { toastError } from "../utils/toastError";
 import { allergiesService } from "@/services/allergies";
@@ -125,8 +125,9 @@ export default defineComponent({
     },
   },
   components: {
-    UploadOutlined,
+    GoBack,
     Header,
+    UploadOutlined,
   },
   setup(props) {
     const toast = new ToastService();
@@ -226,7 +227,6 @@ export default defineComponent({
       imageUrl,
       headers,
       formItemLayout,
-      goBack,
       onFinish,
       handleChange,
     };
