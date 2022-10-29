@@ -1,17 +1,17 @@
 <template>
   <div class="ml-10 cursor-pointer" @click="goBack">
-    <BackwardOutlined style="font-size: 200%" />
+    <RollbackOutlined style="font-size: 150%" />
   </div>
 </template>
 
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "@vue/runtime-core";
-import { BackwardOutlined } from "@ant-design/icons-vue";
+import { RollbackOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
   components: {
-    BackwardOutlined,
+    RollbackOutlined,
   },
   setup() {
     const goBack = () => router.push("/dashboard");

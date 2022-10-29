@@ -13,7 +13,10 @@
     </section>
 
     <main class="flex flex-col md:flex-row mt-4">
-      <div id="img-symp" class="px-0 md:px-4 w-screen md:w-1/4 md:flex-shrink-0">
+      <div
+        id="img-symp"
+        class="px-1 md:px-4 w-screen md:w-1/4 md:flex-shrink-0"
+      >
         <div id="img">
           <img
             v-if="allergy.image"
@@ -29,27 +32,12 @@
             @click="showModal"
             class="w-full h-60 object-cover cursor-pointer"
           />
-          <a-modal
-            v-model:visible="visible"
-            width="100%"
-            wrap-class-name="full-modal"
-            :title="allergy.name"
-            cancelText="Close"
-            @ok="handleOk"
-          >
-            <img
-              :src="allergy.image"
-              :alt="allergy.name"
-              class="w-full"
-              v-if="allergy.image"
-            />
-            <img
-              src="@/assets/images/default.jpg"
-              :alt="allergy.name"
-              class="w-full"
-              v-else
-            />
-          </a-modal>
+          <ImageModal
+             v-model:visible="visible"
+            :allergyImage="allergy.image"
+            :allergyName="allergy.name"
+            :handleOk="handleOk"
+          />
         </div>
         <div id="symp" class="mt-4">
           <h3 class="font-bold text-center my-5">Symptoms</h3>
@@ -157,9 +145,10 @@ import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
 import { getFromStore } from "@/utils/store";
-import GoBack from '../components/Back.vue';
+import GoBack from "../components/Back.vue";
 import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
+import ImageModal from "../components/Modal.vue";
 import { toastError } from "../utils/toastError";
 import { allergiesService } from "@/services/allergies";
 import { IAllergyResponse, IComment } from "@/types/allergies";
@@ -171,6 +160,7 @@ export default defineComponent({
     GoBack,
     Header,
     Loading,
+    ImageModal,
     DeleteOutlined,
   },
   setup() {
