@@ -1,77 +1,55 @@
 <template>
-  <main>
-    <div class="flex gap-2">
-      <QuestionOutlined />
-      <button @click="showDrawer" class="hover:text-blue-400">
-        FAQ
-      </button>
-    </div>
-    <a-drawer
-      v-model:visible="visible"
-      class="custom-class"
-      style="color: red"
-      placement="right"
-    >
-      <div class="faq-card">
-        <h2 class="faq-card__title">FAQ</h2>
-        <ul class="faq-card__list">
-          <li class="faq-card__item">
-            <button class="faq-card__button faq-card__button_active">
-              How do I add a new allergy?<i
-                class="faq-card__icon fa fa-caret-down"
-                aria-hidden="true"
-              ></i>
-            </button>
-            <p class="faq-card__desc">
-              You can add a new allergy by clicking on the "Add Allergy" button
-              in the home page.
-            </p>
-          </li>
-          <li class="faq-card__item">
-            <button class="faq-card__button faq-card__button_active">
-              Can I add multiple allergies?<i
-                class="faq-card__icon fa fa-caret-down"
-                aria-hidden="true"
-              ></i>
-            </button>
-            <p class="faq-card__desc">
-              Yes, you can add more than one allergy.
-            </p>
-          </li>
+  <div class="py-5 block md:hidden">
+    <GoBack />
+  </div>
+  <div class="bg-white flex flex-col justify-center items-center">
+    <h2 class="faq-card__title">FAQ</h2>
+    <ul class="faq-card__list">
+      <li class="faq-card__item">
+        <button class="faq-card__button faq-card__button_active">
+          How do I add a new allergy?<i
+            class="faq-card__icon fa fa-caret-down"
+            aria-hidden="true"
+          ></i>
+        </button>
+        <p class="faq-card__desc">
+          You can add a new allergy by clicking on the "Add Allergy" button in
+          the home page.
+        </p>
+      </li>
+      <li class="faq-card__item">
+        <button class="faq-card__button faq-card__button_active">
+          Can I add multiple allergies?<i
+            class="faq-card__icon fa fa-caret-down"
+            aria-hidden="true"
+          ></i>
+        </button>
+        <p class="faq-card__desc">Yes, you can add more than one allergy.</p>
+      </li>
 
-          <li class="faq-card__item">
-            <button class="faq-card__button faq-card__button_active">
-              How do I see all the users in the app?<i
-                class="faq-card__icon fa fa-caret-down"
-                aria-hidden="true"
-              ></i>
-            </button>
-            <p class="faq-card__desc">
-              Only admins are able to see all the users in the app.
-            </p>
-          </li>
-        </ul>
-      </div>
-    </a-drawer>
-  </main>
+      <li class="faq-card__item">
+        <button class="faq-card__button faq-card__button_active">
+          How do I see all the users in the app?<i
+            class="faq-card__icon fa fa-caret-down"
+            aria-hidden="true"
+          ></i>
+        </button>
+        <p class="faq-card__desc">
+          Only admins are able to see all the users in the app.
+        </p>
+      </li>
+    </ul>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "@vue/runtime-core";
-import { QuestionOutlined } from "@ant-design/icons-vue";
+<script>
+import { defineComponent } from "@vue/runtime-core";
+import GoBack from "../components/Back.vue";
 
 export default defineComponent({
   name: "FAQ",
   components: {
-    QuestionOutlined,
-  },
-  setup() {
-    const visible = ref(false);
-    const showDrawer = () => (visible.value = true);
-    return {
-      visible,
-      showDrawer,
-    };
+    GoBack,
   },
 });
 </script>
@@ -100,37 +78,8 @@ $faq-card__button_clr: $gray-350;
 $faq-card__button_hover-clr: $pink-400;
 $faq-card__icon_clr: $pink-400;
 
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box: {
-    sizing: border-box;
-  }
-}
-
-body {
-  background: $body_bg-gradient;
-  display: grid;
-  font: {
-    size: $fs-400;
-    family: $primary-font;
-  }
-  min: {
-    height: 100vh;
-  }
-  place: {
-    items: center;
-  }
-}
-
 .faq-card {
   background: $faq-card_bg-clr;
-  width: 330px;
-  border: {
-    radius: 20px;
-  }
 
   &__title {
     color: $faq-card__title_clr;

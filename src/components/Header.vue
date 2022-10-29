@@ -3,7 +3,7 @@
     <h1 class="font-bold text-xl">Allergies Management</h1>
     <div class="flex justify-end items-center space-x-5">
       <div id="faq" class="hidden md:block">
-        <FAQ />
+        <Drawer />
       </div>
       <div id="settings">
         <a-menu mode="horizontal">
@@ -15,8 +15,13 @@
             <a-menu-item-group title="Actions">
               <div class="block md:hidden">
                 <a-menu-item>
-                <router-link to="/add-allergy">Add Allergy</router-link>
-              </a-menu-item>
+                  <router-link to="/add-allergy">Add Allergy</router-link>
+                </a-menu-item>
+              </div>
+              <div class="block md:hidden">
+                <a-menu-item>
+                  <router-link to="/faq">FAQ</router-link>
+                </a-menu-item>
               </div>
               <a-menu-item v-if="isAdmin">
                 <router-link to="/users">All Users</router-link>
@@ -30,19 +35,19 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "@vue/runtime-core";
 import { SettingOutlined } from "@ant-design/icons-vue";
 
-import FAQ from "./FAQ.vue";
 import { logout } from "@/utils/logout";
+import Drawer from './Drawer.vue';
 import { isUserTheAdmin } from "../composables/isAdmin";
 
 export default defineComponent({
   name: "Header",
 
   components: {
-    FAQ,
+    Drawer,
     SettingOutlined,
   },
   setup() {

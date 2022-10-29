@@ -3,7 +3,7 @@
     width="100%"
     wrap-class-name="full-modal"
     :title="name"
-    class="font-bold text-center"
+    class="text-center font-bold"
     cancelText="Close"
     @ok="handleClick"
   >
