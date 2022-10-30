@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-5 p-4 bg-white flex justify-between items-center">
+  <div class="mb-5 p-4 bg-white flex justify-between items-center overflow-hidden">
     <h1 class="font-bold text-xl">Allergies Management</h1>
     <div class="flex justify-end items-center space-x-5">
       <div id="faq" class="hidden md:block">

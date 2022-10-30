@@ -48,7 +48,7 @@
               </template>
             </a-list>
           </div>
-          <p class="" v-else>
+          <p class="text-sm" v-else>
             no symptoms have been added for this allergy yet.
           </p>
         </div>
@@ -82,7 +82,7 @@
                   >
                 </p>
 
-                <p class="" v-else-if="comment.comment.length > 500 && seeMore">
+                <p class="text-justify w-11/12" v-else-if="comment.comment.length > 500 && seeMore">
                   {{ comment.comment.substring(0, comment.comment.length) }}
 
                   <span @click="handleSee" class="text-pink-500 cursor-pointer"
@@ -90,7 +90,7 @@
                   >
                 </p>
 
-                <p class="" v-else>
+                <p v-else>
                   {{ comment.comment }}
                 </p>
 

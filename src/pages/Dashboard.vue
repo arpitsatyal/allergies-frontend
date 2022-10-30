@@ -7,7 +7,9 @@
     </a-button>
   </div>
 
-  <div class="flex flex-col mb-3 justify-center items-center w-screen space-y-3">
+  <div
+    class="flex flex-col mb-3 justify-center items-center w-screen space-y-3 overflow-hidden"
+  >
     <h2 class="py-4 font-bold" v-if="currentUser">
       Welcome,
       <span v-if="isAdmin">admin ;)</span>
