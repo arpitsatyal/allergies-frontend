@@ -2,7 +2,7 @@ import { ToastService } from "./../services/toast";
 
 export function toastError(error: any) {
   const toast = new ToastService();
-  const errorFromBE = error.response.data.error;
+  const errorFromBE = error.response?.data.error;
 
   if (errorFromBE) {
     if (errorFromBE.message) {
@@ -13,6 +13,6 @@ export function toastError(error: any) {
       toast.error(errorFromBE);
     }
   } else {
-    toast.error(error.message);
+    toast.error('something went wrong.');
   }
 }

@@ -33,7 +33,7 @@
             class="w-full h-60 object-cover cursor-pointer"
           />
           <ImageModal
-             v-model:visible="visible"
+            v-model:visible="visible"
             :allergyImage="allergy.image"
             :allergyName="allergy.name"
             :handleOk="handleOk"
@@ -41,15 +41,13 @@
         </div>
         <div id="symp" class="mt-4">
           <h3 class="font-bold text-center my-5">Symptoms</h3>
-          <div v-if="allergy.symptoms.length" class="mb-0 md:mb-5">
-            <a-list size="large" bordered :data-source="allergy.symptoms">
-              <template #renderItem="{ item }">
-                <a-list-item>{{ item }}</a-list-item>
-              </template>
-            </a-list>
+          <div v-if="allergy.symptoms.length" class="mb-0 md:mb-5 flex flex-wrap gap-3 justify-center items-center">
+            <div v-for=" symptoms in allergy.symptoms" :key="symptoms">
+              <Chip :textToRender="symptoms" />
+            </div>
           </div>
-          <p class="text-sm" v-else>
-            no symptoms have been added for this allergy yet.
+          <p class="text-sm text-center" v-else>
+            No symptoms have been added for this allergy yet.
           </p>
         </div>
       </div>
@@ -82,7 +80,10 @@
                   >
                 </p>
 
-                <p class="text-justify w-11/12" v-else-if="comment.comment.length > 500 && seeMore">
+                <p
+                  class="text-justify w-11/12"
+                  v-else-if="comment.comment.length > 500 && seeMore"
+                >
                   {{ comment.comment.substring(0, comment.comment.length) }}
 
                   <span @click="handleSee" class="text-pink-500 cursor-pointer"
@@ -145,6 +146,7 @@ import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 
 import router from "@/router";
 import { getFromStore } from "@/utils/store";
+import Chip from "../components/Chip.vue";
 import GoBack from "../components/Back.vue";
 import Header from "../components/Header.vue";
 import Loading from "../components/Loading.vue";
@@ -157,6 +159,7 @@ dayjs.extend(relativeTime);
 
 export default defineComponent({
   components: {
+    Chip,
     GoBack,
     Header,
     Loading,
