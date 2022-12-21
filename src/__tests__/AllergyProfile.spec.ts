@@ -31,4 +31,35 @@ describe('Allergy.vue', () => {
     wrapper.vm.handleOk()
     expect(wrapper.vm.visible).toBe(false)
   })
+  test('getAllergy renders allergy correctly', () => {
+    // create an allergy object
+    const allergy = {
+      name: 'Peanut allergy',
+      severity: 'Severe',
+      image: 'https://example.com/peanut-allergy.jpg',
+      symptoms: ['Hives', 'Swelling', 'Difficulty breathing'],
+      comments: []
+    }
+  
+    getAllergy(allergy);
+  
+    expect(document.querySelector('.font-bold').textContent).toBe('Peanut allergy');
+    expect(document.querySelector('.heading').textContent).toBe('Severity: Severe');
+    expect(document.querySelector('img').src).toBe('https://example.com/peanut-allergy.jpg');
+    expect(document.querySelectorAll('.chip')[0].textContent).toBe('Hives');
+    expect(document.querySelectorAll('.chip')[1].textContent).toBe('Swelling');
+    expect(document.querySelectorAll('.chip')[2].textContent).toBe('Difficulty breathing');
+  });
+  
+  test('addComment adds and renders comment correctly', () => {
+    const newComment = {
+      addedBy: { name: 'Jane Doe' },
+      comment: 'I have a peanut allergy and it can be very severe.',
+      timestamp: '2022-01-01 12:00:00'
+    }
+  
+    addComment(newComment);
+  
+  
+})
 })

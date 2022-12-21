@@ -7,8 +7,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "vue-cli-service test:unit --silent",
-    "test:coverage": "vue-cli-service test:unit --coverage"
+    "test:coverage": "vue-cli-service test:unit --coverage --collectCoverageFrom='src/**/*.{ts,vue,tsx}' --coveragePathIgnorePatterns='src/services|src/store'"
   },
+  
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
     "ant-design-vue": "^3.2.11",

@@ -9,18 +9,16 @@
     <div class="py-3">
       <p v-html="allergyInfo"></p>
     </div>
-    <!-- <p>read more
-      <router-link to=`https://en.wikipedia.org/wiki/${allergyName}`>here</router-link>
-    </p> -->
+
     <img :src="image" :alt="name" class="w-full" v-if="image" />
     <img src="@/assets/images/default.jpg" :alt="name" class="w-full" v-else />
   </a-modal>
 </template>
 
 <script lang="ts">
+import axios from "axios";
 import { toastError } from "@/utils/toastError";
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
-import axios from "axios";
 
 export default defineComponent({
   props: {

@@ -36,5 +36,4 @@ describe("toastError", () => {
     toastError(error);
     expect(toast.error).toHaveBeenCalledWith(JSON.stringify({ foo: "bar" }));
   });
-
 })

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import Signup from '../pages/Signup.vue'
+import { useStore } from "vuex";
 
 describe('Allergies Manegement Application', () => {
   it('renders the title', () => {
@@ -24,3 +25,33 @@ describe('Allergies Manegement Application', () => {
     expect(wrapper.find('form h2').text()).toBe('Sign up')
   })
 })
+it("calls the correct action when the form is submitted", () => {
+  const mockStore = {
+    dispatch: jest.fn(),
+  };
+  (useStore as jest.Mock).mockReturnValue(mockStore);
+
+  const createUserMock = jest.fn().mockResolvedValue({});
+  const loginUserMock = jest.fn().mockResolvedValue({});
+
+  const wrapper = mount(Signup);
+  wrapper.setMethods({ createUser: createUserMock, loginUser: loginUserMock });
+
+  // Set the component data
+  wrapper.setData({
+    name: "Test User",
+    email: "test@example.com",
+    password: "password123",
+    isLogin: false,
+  });
+
+  // Trigger the onSubmit method
+  wrapper.find("form").trigger("submit.prevent");
+
+  expect(createUserMock).toHaveBeenCalledWith({
+    name: "Test User",
+    email: "test@example.com",
+    password: "password123",
+  });
+  expect(loginUserMock).not.toHaveBeenCalled();
+});
